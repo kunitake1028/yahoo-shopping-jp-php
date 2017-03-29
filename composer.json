@@ -1,6 +1,11 @@
 {
     "name": "shippinno/yahoo-shopping-jp-php",
     "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Shippinno\\YahooShoppingJp\\": "src/YahooShoppingJp"
+        }
+    },
     "require": {
         "guzzlehttp/guzzle": "^6.2"
     },
