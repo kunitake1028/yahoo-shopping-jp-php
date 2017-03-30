@@ -30,6 +30,10 @@ class Client
      * @var string
      */
     private $refreshToken;
+    /**
+     * @var boolean
+     */
+    private $debug = false;
 
     /**
      * @param string $accessToken
@@ -63,32 +67,36 @@ class Client
     public function execute(array $params, $method = 'POST'): array
     {
         if ( strtoupper($method) === 'GET' ) {
-            $options['query'] = $params + [
-//              'access_token' => $this->accessToken
-            ];
+            $options['query'] = $params;
         }
         else {
+            // 適当
             $options['body'] = $params;
         }
-        $options['headers']  = ['Authorization' => 'Bearer ' . $this->accessToken];
-        $options['on_stats'] = function (TransferStats $stats) {
-            echo $stats->getEffectiveUri() . "\n";
-            echo $stats->getTransferTime() . "\n";
-            var_dump($stats->getHandlerStats());
+        $options['headers'] = [
+          'Authorization' => 'Bearer ' . $this->accessToken,
+        ];
 
-            // You must check if a response was received before using the
-            // response object.
-            if ( $stats->hasResponse() ) {
-                echo $stats->getResponse()->getStatusCode();
-            }
-            else {
-                // Error data is handler specific. You will need to know what
-                // type of error data your handler uses before using this
-                // value.
-                var_dump($stats->getHandlerErrorData());
-            }
-        };
-        $options['debug'] = true;
+        if ( $this->debug ) {
+            $options['on_stats'] = function (TransferStats $stats) {
+                echo $stats->getEffectiveUri() . "\n";
+                echo $stats->getTransferTime() . "\n";
+                var_dump($stats->getHandlerStats());
+
+                // You must check if a response was received before using the
+                // response object.
+                if ( $stats->hasResponse() ) {
+                    echo $stats->getResponse()->getStatusCode();
+                }
+                else {
+                    // Error data is handler specific. You will need to know what
+                    // type of error data your handler uses before using this
+                    // value.
+                    var_dump($stats->getHandlerErrorData());
+                }
+            };
+            $options['debug'] = true;
+        }
 
         $rawResponse = $this->httpClient->request($method, $this->api->path(), $options);
 
@@ -97,8 +105,12 @@ class Client
             simplexml_load_string($rawResponse->getBody()->getContents(), null, LIBXML_NOCDATA)
           ), true
         );
-        var_dump($response);
         return $response;
+    }
+
+    public function setDebug(Bool $set)
+    {
+        $this->debug = $set;
     }
 
 }
