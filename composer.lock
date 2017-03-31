@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2ffd2e3013c64ea3a109d392c6dbf65",
+    "content-hash": "646213c0103a9421b3bc4145aab896c1",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -185,6 +185,50 @@
             "time": "2017-03-20T17:10:46+00:00"
         },
         {
+            "name": "myclabs/php-enum",
+            "version": "1.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/myclabs/php-enum.git",
+                "reference": "61f4a24da5be216301447f3278ea6562609d61f5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/myclabs/php-enum/zipball/61f4a24da5be216301447f3278ea6562609d61f5",
+                "reference": "61f4a24da5be216301447f3278ea6562609d61f5",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*",
+                "squizlabs/php_codesniffer": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "MyCLabs\\Enum\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP Enum contributors",
+                    "homepage": "https://github.com/myclabs/php-enum/graphs/contributors"
+                }
+            ],
+            "description": "PHP Enum implementation",
+            "homepage": "http://github.com/myclabs/php-enum",
+            "keywords": [
+                "enum"
+            ],
+            "time": "2017-03-26T10:24:21+00:00"
+        },
+        {
             "name": "psr/http-message",
             "version": "1.0.1",
             "source": {
@@ -233,6 +277,57 @@
                 "response"
             ],
             "time": "2016-08-06T14:39:51+00:00"
+        },
+        {
+            "name": "servo/fluidxml",
+            "version": "1.21",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/servo-php/fluidxml.git",
+                "reference": "b6fb8de6ff781479c9e4fb6e9f27b5af1e87dc4b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/servo-php/fluidxml/zipball/b6fb8de6ff781479c9e4fb6e9f27b5af1e87dc4b",
+                "reference": "b6fb8de6ff781479c9e4fb6e9f27b5af1e87dc4b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6"
+            },
+            "require-dev": {
+                "apigen/apigen": "4.*",
+                "peridot-php/peridot": "1.*",
+                "peridot-php/peridot-code-coverage-reporters": "1.*"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "./source/FluidXml/fluid.php"
+                ],
+                "psr-4": {
+                    "FluidXml\\": "./source/FluidXml/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Daniele Orlando",
+                    "email": "fluidxml@danieleorlando.com",
+                    "homepage": "https://github.com/servo-php/fluidxml",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Concise and fluent XML manipulation library",
+            "homepage": "https://github.com/servo-php/fluidxml",
+            "keywords": [
+                "templating",
+                "xml"
+            ],
+            "time": "2017-01-31T00:37:33+00:00"
         }
     ],
     "packages-dev": [
