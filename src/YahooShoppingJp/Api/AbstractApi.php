@@ -4,6 +4,7 @@ namespace Shippinno\YahooShoppingJp\Api;
 
 abstract class AbstractApi
 {
+
     /**
      * @return string
      */
