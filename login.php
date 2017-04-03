@@ -1,4 +1,5 @@
 <?php
+
 require_once("defines.php");
 
 $contents = file_get_contents('login_view.php');
