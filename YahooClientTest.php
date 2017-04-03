@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+use Shippinno\YahooShoppingJp\Api\SearchItems;
 use Shippinno\YahooShoppingJp\Api\SearchOrders;
 use Shippinno\YahooShoppingJp\Client;
 use Shippinno\YahooShoppingJp\Api\OrderCount;
@@ -24,19 +25,22 @@ $client = new Client(
 //    'sellerId' => $seller_id,
 //]);
 
-$client->setApi(new SearchOrders);
-$response = $client->execute([
-    'Search' => [
-        'Result' => 50,
-        'Start' => 1,
-        'Condition' => [
-            'OrderTimeFrom' => '20170403000000',
-            'OrderTimeTo' => '20170403000000',
-        ],
-        'Field' => 'OrderId,OrderStatus',
-    ],
-    'SellerId' => $seller_id,
-]);
+//$client->setApi(new SearchOrders);
+//$response = $client->execute([
+//    'Search' => [
+//        'Result' => 50,
+//        'Start' => 1,
+//        'Condition' => [
+//            'OrderTimeFrom' => '20170403000000',
+//            'OrderTimeTo' => '20170403000000',
+//        ],
+//        'Field' => 'OrderId,OrderStatus',
+//    ],
+//    'SellerId' => $seller_id,
+//]);
+
+$client->setApi(new SearchItems);
+$response = $client->execute([]);
 
 var_dump($response);
 
