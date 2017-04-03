@@ -6,3 +6,8 @@ services:
     volumes:
      - .:/code
     working_dir: /code
+  nginx:
+    build: ./nginx/.
+    ports:
+      - '80:80'
+      - '443:443'
