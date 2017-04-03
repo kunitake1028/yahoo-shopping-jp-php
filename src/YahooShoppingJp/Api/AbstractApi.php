@@ -15,4 +15,10 @@ abstract class AbstractApi
      * @return string
      */
     abstract public function path(): string;
+
+    /**
+     * @param array $response
+     * @return array
+     */
+    abstract public function distillResponse(array $response): array;
 }

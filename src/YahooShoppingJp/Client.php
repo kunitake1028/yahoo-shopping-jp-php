@@ -121,7 +121,8 @@ class Client
             true
         );
 
-        return $response;
+//        var_dump($response);
+        return $this->api->distillResponse($response);
     }
 
     public function setDebug(Bool $set)
