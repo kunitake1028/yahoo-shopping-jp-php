@@ -4,7 +4,6 @@ namespace Shippinno\YahooShoppingJp;
 
 use FluidXml\FluidXml;
 use GuzzleHttp\Client as HttpClient;
-use GuzzleHttp\TransferStats;
 use Shippinno\YahooShoppingJp\Api\AbstractApi;
 use Symfony\Component\Console\Exception\LogicException;
 
@@ -29,33 +28,35 @@ class Client
      * @var AbstractApi
      */
     private $api;
+
     /**
      * @var string
      */
     private $accessToken;
+
     /**
      * @var string
      */
     private $refreshToken;
-    /**
-     * @var boolean
-     */
-    private $debug = false;
 
     /**
-     * @param string $accessToken
-     * @param string $refreshToken
+     * Clients constructor.
+     * @param HttpClient $httpClient
      */
-    public function __construct(string $accessToken, string $refreshToken, HttpClient $httpClient = null)
+    public function __construct(
+        string $accessToken,
+        string $refreshToken,
+        HttpClient $httpClient = null
+    )
     {
-        $this->accessToken  = $accessToken;
-        $this->refreshToken = $refreshToken;
-
-        if ( null === $httpClient ) {
+        if (null === $httpClient) {
             $httpClient = new HttpClient([
-              'base_uri' => self::BASE_URL,
+                'base_uri' => self::BASE_URL,
             ]);
         }
+
+        $this->accessToken = $accessToken;
+        $this->refreshToken = $refreshToken;
         $this->httpClient = $httpClient;
     }
 
@@ -84,7 +85,7 @@ class Client
         }
 
         $options['headers'] = [
-          'Authorization' => 'Bearer ' . $this->accessToken,
+            'Authorization' => 'Bearer ' . $this->accessToken,
         ];
 
 //        if ( $this->debug ) {
@@ -114,6 +115,7 @@ class Client
             $options
         );
 
+
         $response = json_decode(
             json_encode(
                 simplexml_load_string($rawResponse->getBody()->getContents(), null, LIBXML_NOCDATA)
@@ -124,10 +126,4 @@ class Client
 //        var_dump($response);
         return $this->api->distillResponse($response);
     }
-
-    public function setDebug(Bool $set)
-    {
-        $this->debug = $set;
-    }
-
 }

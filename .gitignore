@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 /vendor/
 /playground.php
 /.idea
 .env
+=======
+/vendor/
+/playground.php
+/.idea
+*.txt
+>>>>>>> develop

@@ -30,19 +30,18 @@ class SearchOrders extends AbstractApi
      */
     public function distillResponse(array $response): array
     {
-        if ($response['Status'] !== 'OK') {
-            if (isset($response['Error'])) {
-                throw new DistillationException($response['Error']['Message'], $response['Error']['Code']);
-            } else {
-                throw new ErrorException('予期しないエラー');
-            }
+//        if ($response['Status'] !== 'OK') {
+//            if (isset($response['Error'])) {
+//                throw new DistillationException($response['Error']['Message'], $response['Error']['Code']);
+//            } else {
+//                throw new ErrorException('予期しないエラー');
+//            }
+//        }
+
+        if(! isset($response['Search']['OrderInfo'])) {
+            return [];
         }
 
-        $results = [];
-        for ($i = 0; $i < $response['Search']['TotalCount']; $i++) {
-            $results[$i] = $response['Search']['OrderInfo'][$i];
-        }
-
-        return $results;
+        return $response['Search']['OrderInfo'];
     }
 }

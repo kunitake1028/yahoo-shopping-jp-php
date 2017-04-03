@@ -15,7 +15,10 @@ $refreshToken = '';
 $seller_id    = 'snbx-nxpqe5hm3';
 
 
-$client = new Client($accessToken, $refreshToken);
+$client = new Client(
+    file_get_contents(__DIR__.'/access_token.txt'),
+    file_get_contents(__DIR__.'/refresh_token.txt')
+);
 //$client->setApi(new OrderCount);
 //$response = $client->execute([
 //    'sellerId' => $seller_id,
@@ -27,7 +30,7 @@ $response = $client->execute([
         'Result' => 50,
         'Start' => 1,
         'Condition' => [
-            'OrderTimeFrom' => '20160904000000',
+            'OrderTimeFrom' => '20170403000000',
             'OrderTimeTo' => '20170403000000',
         ],
         'Field' => 'OrderId,OrderStatus',
