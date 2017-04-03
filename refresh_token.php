@@ -1,6 +1,6 @@
 <?php
 require_once("vendor/autoload.php");
-
+require_once("defines.php");
 
 use YConnect\Credential\ClientCredential;
 use YConnect\YConnectClient;
@@ -15,12 +15,8 @@ define('REFRESH_TOKEN_FILE', 'refresh_token.txt');
 echo "リフレッシュ<br>";
 
 
-// アプリケーションID, シークレッvト
-$client_id     = YAHOO_APP_ID_TEST;
-$client_secret = YAHOO_SECRET_TEST;
-
 // クレデンシャルインスタンス生成
-$cred = new ClientCredential( $client_id, $client_secret );
+$cred = new ClientCredential( YAHOO_APP_ID_TEST, YAHOO_SECRET_TEST );
 // YConnectクライアントインスタンス生成
 $client = new YConnectClient( $cred );
 

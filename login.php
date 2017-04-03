@@ -1,6 +1,5 @@
 <?php
-//yahooシッピーノアプリID（webnotakumiで取得）
-define('YAHOO_APP_ID_TEST', 'dj0zaiZpPUZFNTFuUUQ3Q2piSSZzPWNvbnN1bWVyc2VjcmV0Jng9MWY-');//test
+require_once("defines.php");
 
 $contents = file_get_contents('login_view.php');
 
