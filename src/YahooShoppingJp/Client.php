@@ -83,4 +83,25 @@ class Client
 
         return $response;
     }
+
+    public function execute2(Builder $builder)
+    {
+        $params = $builder->toArray();
+
+        $rawResponse = $this->httpClient->post($this->api->path(), [
+            'form_params' => $params,
+            'headers' => [
+                'Authorization' => 'Bearer '.$this->accessToken,
+            ],
+        ]);
+
+        $response = json_decode(
+            json_encode(
+                simplexml_load_string($rawResponse->getBody()->getContents(), null, LIBXML_NOCDATA)
+            ),
+            true
+        );
+
+        return $response;
+    }
 }
