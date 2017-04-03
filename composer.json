@@ -6,8 +6,17 @@
             "Shippinno\\YahooShoppingJp\\": "src/YahooShoppingJp"
         }
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/yahoojapan/yconnect-php-sdk"
+        }
+    ],
     "require": {
-        "guzzlehttp/guzzle": "^6.2"
+        "guzzlehttp/guzzle": "^6.2",
+        "myclabs/php-enum": "^1.5",
+        "servo/fluidxml": "^1.21",
+        "yahoojapan/yconnect-php-sdk": "dev-master"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.1",
