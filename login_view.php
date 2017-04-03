@@ -17,11 +17,11 @@
                     className: "yconnectLogin"
                 },
                 authorization: {
-                    clientId: "dj0zaiZpPUZFNTFuUUQ3Q2piSSZzPWNvbnN1bWVyc2VjcmV0Jng9MWY-",
-                    redirectUri: "https://local.yahoo-shopping-jp.com/callback.php",
+                    clientId: "{$client_id}",
+                    redirectUri: "{$redirect_uri}",
                     scope: "openid",
-                    state: "$state",
-                    nonce: "$nonce",
+                    state: "{$state}",
+                    nonce: "{$nonce}",
                     windowWidth: "500",
                     windowHeight: "400"
                 },
@@ -44,7 +44,7 @@
 </head>
 <body>
 
-    <p>Yahoo! API利用に必要なアクセストークンを登録します。下記からログインしてください。</p>
+    <p>下記からログインしてください。</p>
     <span class="yconnectLogin"></span>
 
 
