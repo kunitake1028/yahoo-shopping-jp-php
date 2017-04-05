@@ -122,7 +122,7 @@ class Client
     {
         $fluidXml = new FluidXml('Req');
         $fluidXml->add($request->getParams());
-        $options['body'] = $fluidXml->xml();
+        $options['form'] = $fluidXml->xml();
 
         return $options;
     }
