@@ -34,4 +34,12 @@ class GetOrderInfoApi extends AbstractApi
 
         return $response['Result']['OrderInfo'];
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function expectsFormFields(): bool
+    {
+        return false;
+    }
 }
