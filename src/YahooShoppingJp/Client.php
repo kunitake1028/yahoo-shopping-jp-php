@@ -119,10 +119,10 @@ class Client
      */
     private function setRequestParamsForPostRequest(array $options, AbstractRequest $request): array
     {
-        if ($this->api->expectsParamsAsUploadedData()) {
-            $options['body'] = $request->getParams();
-        } else {
+        if ($this->api->expectsFormFields()) {
             $options['form_param'] = $request->getParams();
+        } else {
+            $options['body'] = $request->getParams();
         }
 
         return $options;

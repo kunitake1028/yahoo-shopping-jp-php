@@ -25,8 +25,8 @@ abstract class AbstractApi
     /**
      * @return bool
      */
-    public function expectsParamsAsUploadedData(): bool
+    public function expectsFormFields(): bool
     {
-        return false;
+        return true;
     }
 }

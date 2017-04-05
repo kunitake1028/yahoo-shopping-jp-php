@@ -37,8 +37,8 @@ class SearchOrdersApi extends AbstractApi
     /**
      * {@inheritdoc}
      */
-    public function expectsUploadedData(): bool
+    public function expectsFormFields(): bool
     {
-        return true;
+        return false;
     }
 }

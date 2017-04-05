@@ -38,8 +38,8 @@ class GetOrderInfoApi extends AbstractApi
     /**
      * {@inheritdoc}
      */
-    public function expectsParamsAsUploadedData(): bool
+    public function expectsFormFields(): bool
     {
-        return true;
+        return false;
     }
 }
