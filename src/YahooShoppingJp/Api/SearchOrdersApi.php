@@ -33,4 +33,12 @@ class SearchOrdersApi extends AbstractApi
 
         return $response['Search']['OrderInfo'];
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function expectsUploadedData(): bool
+    {
+        return true;
+    }
 }
