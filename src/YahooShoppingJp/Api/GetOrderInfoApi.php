@@ -2,18 +2,17 @@
 
 namespace Shippinno\YahooShoppingJp\Api;
 
-use ErrorException;
 use Shippinno\YahooShoppingJp\Exception\DistillationException;
 use Shippinno\YahooShoppingJp\HttpMethod;
 
-class SearchItems extends AbstractApi
+class GetOrderInfoApi extends AbstractApi
 {
     /**
      * {@inheritdoc}
      */
     public function httpMethod(): HttpMethod
     {
-        return HttpMethod::GET();
+        return HttpMethod::POST();
     }
 
     /**
@@ -21,15 +20,18 @@ class SearchItems extends AbstractApi
      */
     public function path(): string
     {
-        return 'myItemList';
+        return 'orderInfo';
     }
 
     /**
-     * @param array $response
-     * @return array
+     * {@inheritdoc}
      */
     public function distillResponse(array $response): array
     {
+        if(! isset($response['Result']['OrderInfo'])) {
+            throw new DistillationException;
+        }
 
+        return $response['Result']['OrderInfo'];
     }
 }
