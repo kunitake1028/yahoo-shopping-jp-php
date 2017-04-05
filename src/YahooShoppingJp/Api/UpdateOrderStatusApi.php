@@ -31,4 +31,9 @@ class UpdateOrderStatusApi extends AbstractApi
         return 'orderStatusChange';
     }
 
+    public function expectsFormFields(): bool
+    {
+        return false;
+    }
+
 }

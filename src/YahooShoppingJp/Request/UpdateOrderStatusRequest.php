@@ -6,6 +6,7 @@ use LogicException;
 use Shippinno\YahooShoppingJp\Exception\InvalidRequestException;
 use Shippinno\YahooShoppingJp\Enum\OrderStatus;
 use Shippinno\YahooShoppingJp\Enum\CancelReason;
+use FluidXml\FluidXml;
 
 class UpdateOrderStatusRequest extends AbstractRequest
 {
@@ -146,13 +147,15 @@ class UpdateOrderStatusRequest extends AbstractRequest
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getParams(): array
+    public function getParams()
     {
         $this->validateRequest();
 
-        return $this->params;
+        $fluidXml = new FluidXml('Req');
+        $fluidXml->add($this->params);
+        return $fluidXml->xml();
     }
 
     /**

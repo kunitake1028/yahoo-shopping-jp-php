@@ -8,12 +8,13 @@ use Shippinno\YahooShoppingJp\Client;
 use Shippinno\YahooShoppingJp\Api\OrderCount;
 use Shippinno\YahooShoppingJp\Factory\UpdateOrderStatusFactory;
 use Shippinno\YahooShoppingJp\Enum\OrderStatus;
+use Shippinno\YahooShoppingJp\Enum\CancelReason;
 
 define('YAHOO_APP_ID',
   'dj0zaiZpPUZFNTFuUUQ3Q2piSSZzPWNvbnN1bWVyc2VjcmV0Jng9MWY-');
 define('YAHOO_SECRET',
   'a71d10c84a7826c7f98aae379f4d33607dff4a87');
-$accessToken  = 'V1q.H5thh5WhzIZj5pDpuleH.vvtCzipLEIse7vz2lICACc92JXYRZpf579Pwibj79zydSPy7K2SAj5CrMohTMbc_RPdsHbgoYflT68sxrbJJudM7kSSIGdpxBTBMoEPxArFiffGNI1XVtmTK7JiJEhykdkxISSWJ1ux9tuaKLR_jzqu6b.KD9pQOVL42pMcHgd1weAFfZCTKVTUz0_cxJdMqWUWeh.lCapph82S.2QERVjzfjSAfkV8QAjotQ413WqvHAtBmnx5dxg3DS5dAiK1RN0cAf5u_2EKcyxaBKL8QhJN5knDuOx_eA3kYpblwc82ghNLWEeb.EQwxTkNcuzE5VJuUdO0OuH0i.7pOPpbMSBho0zx1ySTgK3qGUaleG0KgW0AJ3uEU0xr9g5GUFyTlw1lO5e0Q8hKqsXGj6DAcTqnnW9UHj1u2.XjOKW735vnZAL0KF5xZj6BE9GnKwvlHghoglx4pA_0p8_pALKC5Lbru.JE4LearhBrjcQKGowx6M.jhwfc8oNtUKS7bO600fYLsH9xuNXY3lu8ABrfcmuC3ZPClh7UMFBD7FfIrQZ4yx3FJ.pjZSaXfuNyv2bYTSk0jK_ulzmDafsESkLGzmigddC3ZAVj3YO0dGlq0loqvKgGdRSPHtT5';
+$accessToken  = 'dw_bcoYMsYi_ahYU5.6vkn.vTk6Y6nF74YIw82P4dLoHjR8eRrEGMbKS9YYB1f6F95sgm3Z4d0FSWfrNYCb0EdxE02CFVz..4daPOZKt9Ud3dZ1ewLt7.TYDbkbjywzinO1qnH1Z4QdPaenDtNK.JVILPbTpJHIgmdatCFHX7ea_hFPfRl04Z7xuXaCE9NcH6ICdAYMaC2NE6N4Dg6hnY3sTJpwVGPCEc10GBcVLB7j2CTflK4rN0Vmmj2mdxCZqrE3jYh0AqtsfOpSqhXoHIBsepx5P7YiGtTclX_Uh0LpzDkTlpZJ7Si66zl4LOEkFASJHtU86bRosDPu3ISGDlf1ar61fJvf9q9Z94dXGJaIKRXpO2xFERGEOEH0FWUSzWeouJR0DZlnsAjvt2lT1wKBJH9IceNutTFdBe8ypIlkjlIRjyBc2jjVA6nz4.4E1DIRwTydYmZmbqnWqdp8oEuwX2Cd9QCGOjC9CWI2uHhCAx_bGm6GlPhNO.agutvX6zSzl.UdsU9JrDexi8XEg1FQ9s.EqownBSa8Uoh9dSUiMz8h4E8MyKM65d9e9csOzWTDqOkWeVGpIE5w60T8DmoI06nTCmgrACEk4jQaftj72fvX7uz.zTU4yUFYfUGi290XfPaIPMm.u33iI';
 $refreshToken = '';
 $seller_id    = 'snbx-nxpqe5hm3';
 
@@ -31,8 +32,8 @@ $client->setApi($factory->api());
 $request = $factory->request();
 $request->setSellerId($seller_id)
   ->setIsPointFix(false)
-  ->setOrderStatus(OrderStatus::PREORDERED())
-  ->setOrderId('snbx-nxpqe5hm3-10000054');
+  ->setOrderStatus(OrderStatus::PROCESSED())
+  ->setOrderId('snbx-nxpqe5hm3-10000045');
 
 $response = $client->execute($request);
 
