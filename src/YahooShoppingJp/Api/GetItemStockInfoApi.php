@@ -28,10 +28,10 @@ class GetItemStockInfoApi extends AbstractApi
      */
     public function distillResponse(array $response): array
     {
-        if(! isset($response['ResultSet'])) {
+        if(! isset($response['Result'])) {
             throw new DistillationException;
         }
 
-        return $response['ResultSet'];
+        return $response['Result'];
     }
 }
