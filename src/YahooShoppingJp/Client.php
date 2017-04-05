@@ -4,8 +4,9 @@ namespace Shippinno\YahooShoppingJp;
 
 use FluidXml\FluidXml;
 use GuzzleHttp\Client as HttpClient;
+use Psr\Http\Message\ResponseInterface;
 use Shippinno\YahooShoppingJp\Api\AbstractApi;
-use Symfony\Component\Console\Exception\LogicException;
+use Shippinno\YahooShoppingJp\Request\AbstractRequest;
 
 class Client
 {
@@ -40,8 +41,9 @@ class Client
     private $refreshToken;
 
     /**
-     * Clients constructor.
-     * @param HttpClient $httpClient
+     * @param string $accessToken
+     * @param string $refreshToken
+     * @param HttpClient|null $httpClient
      */
     public function __construct(
         string $accessToken,
@@ -69,62 +71,103 @@ class Client
     }
 
     /**
-     * @param array $params
+     * @param AbstractRequest $request
+     * @return mixed
+     */
+    public function execute(AbstractRequest $request): array
+    {
+        $options = [];
+        $options = $this->setRequestParams($options, $request);
+        $options = $this->setAuthorizationHeader($options);
+        $rawResponse = $this->request($options);
+        $response = $this->decodeResponse($rawResponse);
+
+        return $this->api->distillResponse($response);
+    }
+
+    /**
+     * @param array $options
+     * @param AbstractRequest $request
      * @return array
      */
-    public function execute(array $params): array
+    private function setRequestParams(array $options, AbstractRequest $request): array
     {
         if ($this->api->httpMethod()->equals(HttpMethod::GET())) {
-            $options['query'] = $params;
+            $options = $this->setRequestParamsForGetRequest($options, $request);
         } elseif ($this->api->httpMethod()->equals(HttpMethod::POST())) {
-            $fluidXml = new FluidXml('Req');
-            $fluidXml->add($params);
-            $options['body'] = $fluidXml->xml();
-        } else {
-            throw new LogicException('HTTP メソッドが不正です。');
+            $options = $this->setRequestParamsForPostRequest($options, $request);
         }
 
+        return $options;
+    }
+
+    /**
+     * @param array $options
+     * @param AbstractRequest $request
+     * @return array
+     */
+    private function setRequestParamsForGetRequest(array $options, AbstractRequest $request): array
+    {
+        $options['query'] = $request->getParams();
+
+        return $options;
+    }
+
+    /**
+     * @param array $options
+     * @param AbstractRequest $request
+     * @return array
+     */
+    private function setRequestParamsForPostRequest(array $options, AbstractRequest $request): array
+    {
+        $fluidXml = new FluidXml('Req');
+        $fluidXml->add($request->getParams());
+        $options['body'] = $fluidXml->xml();
+
+        return $options;
+    }
+
+    /**
+     * @param array $options
+     * @return array
+     */
+    private function setAuthorizationHeader(array $options): array
+    {
         $options['headers'] = [
             'Authorization' => 'Bearer ' . $this->accessToken,
         ];
 
-//        if ( $this->debug ) {
-//            $options['on_stats'] = function (TransferStats $stats) {
-//                echo $stats->getEffectiveUri() . "\n";
-//                echo $stats->getTransferTime() . "\n";
-//                var_dump($stats->getHandlerStats());
-//
-//                // You must check if a response was received before using the
-//                // response object.
-//                if ( $stats->hasResponse() ) {
-//                    echo $stats->getResponse()->getStatusCode();
-//                }
-//                else {
-//                    // Error data is handler specific. You will need to know what
-//                    // type of error data your handler uses before using this
-//                    // value.
-//                    var_dump($stats->getHandlerErrorData());
-//                }
-//            };
-//            $options['debug'] = true;
-//        }
+        return $options;
+    }
 
-        $rawResponse = $this->httpClient->request(
+    /**
+     * @param $options
+     * @return mixed|ResponseInterface
+     */
+    private function request($options)
+    {
+        return $this->httpClient->request(
             $this->api->httpMethod()->getValue(),
             $this->api->path(),
             $options
         );
+    }
 
-
-        $response = json_decode(
+    /**
+     * @param ResponseInterface $rawResponse
+     * @return array
+     */
+    private function decodeResponse(ResponseInterface $rawResponse): array
+    {
+        return json_decode(
             json_encode(
-                simplexml_load_string($rawResponse->getBody()->getContents(), null, LIBXML_NOCDATA)
+                simplexml_load_string(
+                    $rawResponse->getBody()->getContents(),
+                    null,
+                    LIBXML_NOCDATA
+                )
             ),
             true
         );
-
-
-//        var_dump($response);
-        return $this->api->distillResponse($response);
     }
 }

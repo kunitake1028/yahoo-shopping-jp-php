@@ -4,6 +4,6 @@ namespace Shippinno\YahooShoppingJp\Exception;
 
 use Exception;
 
-class DistillationException extends Exception
+class InvalidRequestException extends Exception
 {
 }
