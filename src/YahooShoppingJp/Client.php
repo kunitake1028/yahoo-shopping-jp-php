@@ -2,7 +2,6 @@
 
 namespace Shippinno\YahooShoppingJp;
 
-use FluidXml\FluidXml;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Http\Message\ResponseInterface;
 use Shippinno\YahooShoppingJp\Api\AbstractApi;
@@ -123,9 +122,12 @@ class Client
      */
     private function setRequestParamsForPostRequest(array $options, AbstractRequest $request): array
     {
-        $fluidXml        = new FluidXml('Req');
-        $fluidXml->add($request->getParams());
-        $options['body'] = $fluidXml->xml();
+        if ($this->api->expectsFormFields()) {
+            $options['form_param'] = $request->getParams();
+        } else {
+            $options['body'] = $request->getParams();
+        }
+
         return $options;
     }
 
