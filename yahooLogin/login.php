@@ -5,7 +5,7 @@ require_once("defines.php");
 $contents = file_get_contents('login_view.php');
 
 $viewParam['client_id'] = YAHOO_APP_ID_TEST;
-$viewParam['redirect_uri'] = 'https://local.yahoo-shopping-jp.com/callback.php';
+$viewParam['redirect_uri'] = str_replace('login.php','callback.php','https://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
 //state リクエストとコールバック間の検証用のランダムな文字列
 $viewParam['state'] = substr(str_shuffle('1234567890abcdefghijklmnopqrstuvwxyz'), 0, 10).'_'.time().'_'.substr(str_shuffle('1234567890abcdefghijklmnopqrstuvwxyz'), 0, 10);
 //nonce リプレイアタック対策のランダムな文字列

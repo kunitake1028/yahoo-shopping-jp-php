@@ -1,5 +1,5 @@
 <?php
-require_once("vendor/autoload.php");
+require_once("../vendor/autoload.php");
 require_once("defines.php");
 
 use YConnect\Credential\ClientCredential;
