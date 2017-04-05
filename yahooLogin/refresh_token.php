@@ -10,7 +10,7 @@ echo "リフレッシュ<br>";
 
 
 // クレデンシャルインスタンス生成
-$cred = new ClientCredential( YAHOO_APP_ID_TEST, YAHOO_SECRET_TEST );
+$cred = new ClientCredential(YAHOO_APP_ID_TEST, YAHOO_SECRET_TEST );
 // YConnectクライアントインスタンス生成
 $client = new YConnectClient( $cred );
 
