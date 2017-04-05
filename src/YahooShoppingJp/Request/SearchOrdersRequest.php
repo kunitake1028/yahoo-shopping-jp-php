@@ -101,9 +101,9 @@ class SearchOrdersRequest extends AbstractRequest
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getParams(): array
+    public function getParams()
     {
         $this->validateRequest();
 
