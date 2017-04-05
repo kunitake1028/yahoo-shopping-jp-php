@@ -5,7 +5,7 @@ namespace Shippinno\YahooShoppingJp\Request;
 abstract class AbstractRequest
 {
     /**
-     * @return array
+     * @return string|array
      */
-    abstract public function getParams(): array;
+    abstract public function getParams();
 }
