@@ -1,5 +1,5 @@
 <?php
-require_once("vendor/autoload.php");
+require_once("../vendor/autoload.php");
 require_once("defines.php");
 
 use YConnect\Credential\ClientCredential;
@@ -11,9 +11,8 @@ echo "コールバック<br>";
 var_dump($_GET);
 
 // アプリケーションID, シークレッvト
-//$client_id     = YAHOO_APP_ID_TEST;
-//$client_secret = YAHOO_SECRET_TEST;
-$redirect_uri = "https://local.yahoo-shopping-jp.com/callback.php";
+$redirect_uri = strtok('https://'.$_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"],'?');
+echo $redirect_uri."<br>";
 
 // クレデンシャルインスタンス生成
 $cred = new ClientCredential( YAHOO_APP_ID_TEST, YAHOO_SECRET_TEST );
