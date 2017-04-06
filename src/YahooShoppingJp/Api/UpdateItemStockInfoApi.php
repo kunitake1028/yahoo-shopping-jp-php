@@ -8,7 +8,7 @@ use Shippinno\YahooShoppingJp\HttpMethod;
 class UpdateItemStockInfoApi extends AbstractApi
 {
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function httpMethod(): HttpMethod
     {
@@ -16,7 +16,7 @@ class UpdateItemStockInfoApi extends AbstractApi
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function path(): string
     {
@@ -24,8 +24,7 @@ class UpdateItemStockInfoApi extends AbstractApi
     }
 
     /**
-     * @param array $response
-     * @return array
+     * {@inheritdoc}
      */
     public function distillResponse(array $response): array
     {
@@ -33,7 +32,7 @@ class UpdateItemStockInfoApi extends AbstractApi
     }
 
     /**
-     * @return bool
+     * {@inheritdoc}
      */
     public function expectsFormFields(): bool
     {
