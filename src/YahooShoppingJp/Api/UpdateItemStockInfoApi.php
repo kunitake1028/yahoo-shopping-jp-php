@@ -31,4 +31,12 @@ class UpdateItemStockInfoApi extends AbstractApi
     {
         return $response['Result'];
     }
+
+    /**
+     * @return bool
+     */
+    public function expectsFormFields(): bool
+    {
+        return true;
+    }
 }
