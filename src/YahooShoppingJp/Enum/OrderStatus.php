@@ -5,6 +5,8 @@ namespace Shippinno\YahooShoppingJp\Enum;
 use MyCLabs\Enum\Enum;
 
 /**
+ * [Enum]注文ステータス
+ * 
  * @method static OrderStatus PREORDERED()
  * @method static OrderStatus PROCESSING()
  * @method static OrderStatus PENDING()
@@ -13,7 +15,6 @@ use MyCLabs\Enum\Enum;
  */
 class OrderStatus extends Enum
 {
-
     /**
      * @var string PREORDERED 予約中
      */
