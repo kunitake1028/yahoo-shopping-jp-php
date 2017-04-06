@@ -31,6 +31,9 @@ class UpdateOrderStatusApi extends AbstractApi
         return 'orderStatusChange';
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function expectsFormFields(): bool
     {
         return false;
