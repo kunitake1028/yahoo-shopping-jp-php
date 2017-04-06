@@ -133,6 +133,7 @@ class UpdateOrderStatusRequest extends AbstractRequest
 
         $fluidXml = new FluidXml('Req');
         $fluidXml->add($this->params);
+
         return $fluidXml->xml();
     }
 
