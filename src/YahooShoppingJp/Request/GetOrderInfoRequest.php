@@ -2,6 +2,7 @@
 
 namespace Shippinno\YahooShoppingJp\Request;
 
+use FluidXml\FluidXml;
 use LogicException;
 
 class GetOrderInfoRequest extends AbstractRequest
@@ -76,8 +77,11 @@ class GetOrderInfoRequest extends AbstractRequest
     /**
      * @return array
      */
-    public function getParams(): array
+    public function getParams()
     {
-        return $this->params;
+        $fluidXml = new FluidXml('Req');
+        $fluidXml->add($this->params);
+
+        return $fluidXml->xml();
     }
 }

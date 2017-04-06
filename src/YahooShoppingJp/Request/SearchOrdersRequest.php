@@ -3,6 +3,7 @@
 namespace Shippinno\YahooShoppingJp\Request;
 
 use DateTimeImmutable;
+use FluidXml\FluidXml;
 use LogicException;
 use Shippinno\YahooShoppingJp\Exception\InvalidRequestException;
 
@@ -100,13 +101,16 @@ class SearchOrdersRequest extends AbstractRequest
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getParams(): array
+    public function getParams()
     {
         $this->validateRequest();
 
-        return $this->params;
+        $fluidXml = new FluidXml('Req');
+        $fluidXml->add($this->params);
+
+        return $fluidXml->xml();
     }
 
     /**
