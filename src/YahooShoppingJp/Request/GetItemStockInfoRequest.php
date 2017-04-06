@@ -29,20 +29,20 @@ class GetItemStockInfoRequest extends AbstractRequest
     }
 
     /**
-     * @param array $itemCodes
+     * @param array $itemCodeList
      * @return self
      */
-    public function setItemCodes(array $itemCodes): self
+    public function setItemCodeList(array $itemCodeList): self
     {
         if (isset($this->params['item_code'])) {
             throw new LogicException('item_code is already set.');
         }
 
-        if (count($this->params['item_code']) > 1000) {
-            throw new LogicException('The number of elements of the item_code array must be less than 1000.');
+        if (count($itemCodeList) > 1000) {
+            throw new LogicException('The number of elements of the itemCodeList array must be less than 1000.');
         }
 
-        $this->params['item_code'] = $itemCodes;
+        $this->params['item_code'] = implode(',', $itemCodeList);
 
         return $this;
     }
