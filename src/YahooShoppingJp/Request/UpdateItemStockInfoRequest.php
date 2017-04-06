@@ -45,19 +45,11 @@ class UpdateItemStockInfoRequest extends AbstractRequest
             throw new LogicException('item_code is already set.');
         }
 
-        if (! preg_match('/^[a-zA-Z0-9\-]+$/', $itemCode)) {
+        if (! preg_match('/^[a-zA-Z0-9\-]{1,99}$/', $itemCode)) {
             throw new InvalidRequestException;
         }
 
-        if (strlen($itemCode) > 99) {
-            throw new InvalidRequestException;
-        }
-
-        if (! preg_match('/^[a-zA-Z0-9\-]*$/', $subCode)) {
-            throw new InvalidRequestException;
-        }
-
-        if (strlen($subCode) > 99) {
+        if (! preg_match('/^[a-zA-Z0-9\-]{0,99}$/', $subCode)) {
             throw new InvalidRequestException;
         }
 
