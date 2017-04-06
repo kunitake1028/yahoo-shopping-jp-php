@@ -4,6 +4,7 @@ namespace Shippinno\YahooShoppingJp\Api;
 
 use Shippinno\YahooShoppingJp\Factory\UpdateItemStockFactory;
 use Shippinno\YahooShoppingJp\HttpMethod;
+use YConnect\Exception\ApiException;
 
 class UpdateItemStockInfoApi extends AbstractApi
 {
@@ -28,7 +29,11 @@ class UpdateItemStockInfoApi extends AbstractApi
      */
     public function distillResponse(array $response): array
     {
-        return $response['Result'];
+        if (! isset($response['@attributes']['totalResultsAvailable'])) {
+            throw new ApiException('予期しないエラー');
+        }
+
+        return isset($response['Result']) ? $response['Result'] : [];
     }
 
     /**
