@@ -8,15 +8,24 @@ use Shippinno\YahooShoppingJp\Exception\InvalidRequestException;
 class UpdateItemStockInfoRequest extends AbstractRequest
 {
     private $params = [];
+    private $quantity = [];
+    private $itemCode = [];
+    private $allowOverdraft = [];
+    private $key;
 
     /**
      * @param string $sellerId
      * @return self
+     * @throws InvalidRequestException
      */
     public function setSellerId(string $sellerId): self
     {
         if (isset($this->params['seller_id'])) {
             throw new LogicException('seller_id is already set.');
+        }
+
+        if (! strlen($sellerId) > 0) {
+            throw new InvalidRequestException;
         }
 
         $this->params['seller_id'] = $sellerId;
@@ -26,30 +35,65 @@ class UpdateItemStockInfoRequest extends AbstractRequest
 
     /**
      * @param string $itemCode
+     * @param string $subCode
      * @return self
+     * @throws InvalidRequestException
      */
-    public function setItemCode(string $itemCode): self
+    public function setItemCode(string $itemCode, string $subCode = ''): self
     {
         if (isset($this->params['item_code'])) {
             throw new LogicException('item_code is already set.');
         }
 
-        $this->params['item_code'] = $itemCode;
+        if (! preg_match('/^[a-zA-Z0-9\-]+$/', $itemCode)) {
+            throw new InvalidRequestException;
+        }
+
+        if (strlen($itemCode) > 99) {
+            throw new InvalidRequestException;
+        }
+
+        if (! preg_match('/^[a-zA-Z0-9\-]*$/', $subCode)) {
+            throw new InvalidRequestException;
+        }
+
+        if (strlen($subCode) > 99) {
+            throw new InvalidRequestException;
+        }
+
+        $this->key = $itemCode;
+
+        if (strlen($subCode) ) {
+            $this->key .= ':'.$subCode;
+        }
+
+        if (! isset($this->itemCode[$this->key])) {
+            $this->itemCode[$this->key] = $this->key;
+        }
 
         return $this;
     }
 
     /**
-     * @param string $quantity
+     * @param int|string $quantity
      * @return self
+     * @throws InvalidRequestException
      */
-    public function setQuantity(string $quantity): self
+    public function setQuantity($quantity): self
     {
         if (isset($this->params['quantity'])) {
             throw new LogicException('quantity is already set.');
         }
 
-        $this->params['quantity'] = $quantity;
+        if (! isset($this->key)) {
+            throw new InvalidRequestException;
+        }
+
+        if (! preg_match('/^((\+|-)?[0-9]{1,9}|INI)$/', $quantity)) {
+            throw new InvalidRequestException;
+        }
+
+        $this->quantity[$this->key] = is_int($quantity) ? strval($quantity) : $quantity;
 
         return $this;
     }
@@ -57,10 +101,23 @@ class UpdateItemStockInfoRequest extends AbstractRequest
     /**
      * @param int $allowOverdraft
      * @return self
+     * @throws InvalidRequestException
      */
     public function setAllowOverdraft(int $allowOverdraft): self
     {
-        $this->params['allow_overdraft'] = $allowOverdraft;
+        if (isset($this->params['allow_overdraft'])) {
+            throw new LogicException('allow_overdraft is already set.');
+        }
+
+        if (! isset($this->key)) {
+            throw new InvalidRequestException;
+        }
+
+        if (! ($allowOverdraft === 0 && $allowOverdraft === 1)) {
+            throw new InvalidRequestException;
+        }
+
+        $this->allowOverdraft[$this->key] = $allowOverdraft;
 
         return $this;
     }
@@ -80,7 +137,38 @@ class UpdateItemStockInfoRequest extends AbstractRequest
      */
     private function validateRequest(): void
     {
-        if (! (isset($this->params['seller_id']) && isset($this->params['item_code']) && isset($this->params['quantity']))) {
+        $itemCodeLength = count($this->itemCode);
+        $quantityLength = count($this->quantity);
+        $allowOverdraftLength = count($this->allowOverdraft);
+
+        if ($itemCodeLength !== $quantityLength) {
+            throw new InvalidRequestException;
+        }
+
+        if (0 < $allowOverdraftLength && $itemCodeLength !== $allowOverdraftLength) {
+            throw new InvalidRequestException;
+        }
+
+        if (1000 < $itemCodeLength) {
+            throw new InvalidRequestException;
+        }
+
+        $this->params['item_code'] = join(',', $this->itemCode);
+        $this->params['quantity'] = join(',', $this->quantity);
+
+        if (0 < $allowOverdraftLength) {
+            $this->params['allow_overdraft'] = join(',', $this->allowOverdraft);
+        }
+
+        if (! isset($this->params['seller_id'])) {
+            throw new InvalidRequestException;
+        }
+
+        if (! strlen($this->params['item_code']) > 0) {
+            throw new InvalidRequestException;
+        }
+
+        if (! strlen($this->params['quantity']) > 0) {
             throw new InvalidRequestException;
         }
     }
