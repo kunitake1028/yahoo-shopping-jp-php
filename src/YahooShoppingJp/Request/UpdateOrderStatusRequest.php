@@ -10,16 +10,14 @@ use FluidXml\FluidXml;
 
 class UpdateOrderStatusRequest extends AbstractRequest
 {
-
     /**
-     *
      * @var array
      */
     private $params = [];
 
     public function __construct()
     {
-
+        
     }
 
     /**
@@ -78,11 +76,6 @@ class UpdateOrderStatusRequest extends AbstractRequest
 
     /**
      * 【必須】注文ステータス
-     * 1 : 予約中
-     * 2 : 処理中
-     * 3 : 保留
-     * 4 : キャンセル
-     * 5 : 完了
      *
      * @param OrderStatus $orderStatus
      * @return self
@@ -115,22 +108,7 @@ class UpdateOrderStatusRequest extends AbstractRequest
     }
 
     /**
-     * ■注文者都合
-     * 100:キャンセル
-     * 110:返品
-     * 120:未入金
-     * 130:住所不明
-     * 140:受け取り拒否
-     * 150連絡不通
-     * 160重複注文
-     * 170決済審査不可
-     * 180その他
-     *
-     * ■ストア都合
-     * 200:決済方法都合
-     * 210:欠品
-     * 220:販売中止
-     * 230:その他
+     * キャンセル理由
      *
      * @param CancelReason $cancelReason
      * @return self
