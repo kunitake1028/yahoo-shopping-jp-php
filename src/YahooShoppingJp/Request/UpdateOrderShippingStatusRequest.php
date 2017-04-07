@@ -82,11 +82,11 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
      */
     public function setShipStatus(ShipStatus $shipStatus): self
     {
-        if (isset($this->params['Ship']['ShipStatus'])) {
+        if (isset($this->params['Order']['Ship']['ShipStatus'])) {
             throw new LogicException('ShipStatus is already set.');
         }
 
-        $this->params['Ship']['ShipStatus'] = $shipStatus->getValue();
+        $this->params['Order']['Ship']['ShipStatus'] = $shipStatus->getValue();
 
         return $this;
     }
@@ -97,7 +97,7 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
      */
     public function setShipMethod(string $shipMethod): self
     {
-        if (isset($this->params['Ship']['ShipMethod'])) {
+        if (isset($this->params['Order']['Ship']['ShipMethod'])) {
             throw new LogicException('ShipMethod is already set.');
         }
 
@@ -107,7 +107,7 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
             throw new InvalidArgumentException('ShipMethod is invalid.');
         }
 
-        $this->params['Ship']['ShipMethod'] = $shipMethod;
+        $this->params['Order']['Ship']['ShipMethod'] = $shipMethod;
 
         return $this;
     }
@@ -118,7 +118,7 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
      */
     public function setShipNotes(string $shipNotes): self
     {
-        if (isset($this->params['Ship']['ShipNotes'])) {
+        if (isset($this->params['Order']['Ship']['ShipNotes'])) {
             throw new LogicException('ShipNotes is already set.');
         }
 
@@ -126,7 +126,7 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
             throw new InvalidArgumentException('ShipNotes is invalid.');
         }
 
-        $this->params['Ship']['ShipNotes'] = $shipNotes;
+        $this->params['Order']['Ship']['ShipNotes'] = $shipNotes;
 
         return $this;
     }
@@ -137,11 +137,11 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
      */
     public function setShipInvoiceNumber1(string $shipInvoiceNumber1): self
     {
-        if (isset($this->params['Ship']['ShipInvoiceNumber1'])) {
+        if (isset($this->params['Order']['Ship']['ShipInvoiceNumber1'])) {
             throw new LogicException('ShipInvoiceNumber1 is already set.');
         }
 
-        $this->params['Ship']['ShipInvoiceNumber1'] = $shipInvoiceNumber1;
+        $this->params['Order']['Ship']['ShipInvoiceNumber1'] = $shipInvoiceNumber1;
 
         return $this;
     }
@@ -152,11 +152,11 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
      */
     public function setShipInvoiceNumber2(string $shipInvoiceNumber2): self
     {
-        if (isset($this->params['Ship']['ShipInvoiceNumber2'])) {
+        if (isset($this->params['Order']['Ship']['ShipInvoiceNumber2'])) {
             throw new LogicException('ShipInvoiceNumber2 is already set.');
         }
 
-        $this->params['Ship']['ShipInvoiceNumber2'] = $shipInvoiceNumber2;
+        $this->params['Order']['Ship']['ShipInvoiceNumber2'] = $shipInvoiceNumber2;
 
         return $this;
     }
@@ -167,11 +167,11 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
      */
     public function setShipUrl(string $shipUrl): self
     {
-        if (isset($this->params['Ship']['ShipUrl'])) {
+        if (isset($this->params['Order']['Ship']['ShipUrl'])) {
             throw new LogicException('ShipUrl is already set.');
         }
 
-        $this->params['Ship']['ShipUrl'] = '![CDATA['.$shipUrl.']]';
+        $this->params['Order']['Ship']['ShipUrl'] = '![CDATA['.$shipUrl.']]';
 
         return $this;
     }
@@ -182,11 +182,11 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
      */
     public function setShipDate(\DateTimeImmutable $shipDate): self
     {
-        if (isset($this->params['Ship']['ShipDate'])) {
+        if (isset($this->params['Order']['Ship']['ShipDate'])) {
             throw new LogicException('ShipDate is already set.');
         }
 
-        $this->params['Ship']['ShipDate'] = $shipDate
+        $this->params['Order']['Ship']['ShipDate'] = $shipDate
                                                 ->setTimeZone(new DateTimeZone('Asia/Tokyo'))
                                                 ->format('Ymd');
 
@@ -199,11 +199,11 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
      */
     public function setArrivalDate(\DateTimeImmutable $arrivalDate): self
     {
-        if (isset($this->params['Ship']['ArrivalDate'])) {
+        if (isset($this->params['Order']['Ship']['ArrivalDate'])) {
             throw new LogicException('ArrivalDate is already set.');
         }
 
-        $this->params['Ship']['ArrivalDate'] = $arrivalDate
+        $this->params['Order']['Ship']['ArrivalDate'] = $arrivalDate
                                                     ->setTimeZone(new DateTimeZone('Asia/Tokyo'))
                                                     ->format('Ymd');
 
@@ -226,23 +226,20 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
      */
     private function validateRequest(): void
     {
-        $requiredParams = [
-            'SellerId'=>'',
-            'OrderId'=>'Target',
-            'IsPointFix'=>'Target',
-            'ShipStatus'=>'Ship'];
-
-        foreach ($requiredParams as $key => $dir){
-            if($dir === '') {
-                if (!isset($this->params[$key])) {
-                    throw new InvalidRequestException($key . ' is required.');
-                }
-            }else{
-                if (!isset($this->params[$dir][$key])) {
-                    throw new InvalidRequestException($key . ' is required.');
-                }
-            }
+        if (!isset($this->params['SellerId'])) {
+            throw new InvalidRequestException('SellerId is required.');
         }
 
+        if (!isset($this->params['Target']['OrderId'])) {
+            throw new InvalidRequestException('OrderId is required.');
+        }
+
+        if (!isset($this->params['Target']['IsPointFix'])) {
+            throw new InvalidRequestException('IsPointFix is required.');
+        }
+
+        if (!isset($this->params['Order']['Ship']['ShipStatus'])) {
+            throw new InvalidRequestException('ShipStatus is required.');
+        }
     }
 }

@@ -23,11 +23,13 @@ try{
 
     $client->setApi($factory->api());
     $request = $factory->request();
-    $request = $request->setSellerId($seller_id)
+    $request = $request
+                        ->setSellerId($seller_id)
                         ->setOrderId('hogehoge')
                         ->setIsPointFix(true)
                         ->setShipStatus(ShipStatus::UNSHIPPABLE());
 
+    //$options['body'] = $fluidXml->xml();で通る
     $response = $client->execute($request);
 
     var_dump($response);
@@ -37,6 +39,4 @@ try{
     echo $e->getLine()."\n";
     echo $e->getCode().':'.$e->getMessage()."\n";
 }
-//$client->setDebug(true);
-//$response = $client->execute(['sellerId' => $seller_id], 'GET');
 
