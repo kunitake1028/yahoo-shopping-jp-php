@@ -24,8 +24,8 @@ class UpdateItemStockInfoRequest extends AbstractRequest
             throw new LogicException('seller_id is already set.');
         }
 
-        if (! strlen($sellerId) > 0) {
-            throw new InvalidRequestException;
+        if (strlen($sellerId) === 0) {
+            throw new InvalidArgumentException;
         }
 
         $this->params['seller_id'] = $sellerId;
@@ -55,8 +55,8 @@ class UpdateItemStockInfoRequest extends AbstractRequest
 
         $this->key = $itemCode;
 
-        if (strlen($subCode) ) {
-            $this->key .= ':'.$subCode;
+        if (strlen($subCode)) {
+            $this->key = $this->key.':'.$subCode;
         }
 
         if (! isset($this->itemCode[$this->key])) {
