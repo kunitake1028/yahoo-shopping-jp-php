@@ -8,10 +8,6 @@ use Shippinno\YahooShoppingJp\Exception\InvalidRequestException;
 class UpdateItemStockInfoRequest extends AbstractRequest
 {
     private $params = [];
-    private $quantity = [];
-    private $itemCode = [];
-    private $allowOverdraft = [];
-    private $key;
 
     /**
      * @param string $sellerId
@@ -53,14 +49,10 @@ class UpdateItemStockInfoRequest extends AbstractRequest
             throw new InvalidRequestException;
         }
 
-        $this->key = $itemCode;
+        $this->params['item_code'] = $itemCode;
 
         if (strlen($subCode)) {
-            $this->key = $this->key.':'.$subCode;
-        }
-
-        if (! isset($this->itemCode[$this->key])) {
-            $this->itemCode[$this->key] = $this->key;
+            $this->params['item_code'] = $this->params['item_code'].':'.$subCode;
         }
 
         return $this;
@@ -77,15 +69,11 @@ class UpdateItemStockInfoRequest extends AbstractRequest
             throw new LogicException('quantity is already set.');
         }
 
-        if (! isset($this->key)) {
-            throw new InvalidRequestException;
-        }
-
         if (! preg_match('/^((\+|-)?[0-9]{1,9}|INI)$/', $quantity)) {
             throw new InvalidRequestException;
         }
 
-        $this->quantity[$this->key] = is_int($quantity) ? strval($quantity) : $quantity;
+        $this->params['quantity'] = is_int($quantity) ? strval($quantity) : $quantity;
 
         return $this;
     }
@@ -109,7 +97,7 @@ class UpdateItemStockInfoRequest extends AbstractRequest
             throw new InvalidRequestException;
         }
 
-        $this->allowOverdraft[$this->key] = $allowOverdraft;
+        $this->params['allow_overdraft'] = $allowOverdraft;
 
         return $this;
     }
@@ -129,38 +117,15 @@ class UpdateItemStockInfoRequest extends AbstractRequest
      */
     private function validateRequest(): void
     {
-        $itemCodeLength = count($this->itemCode);
-        $quantityLength = count($this->quantity);
-        $allowOverdraftLength = count($this->allowOverdraft);
-
-        if ($itemCodeLength !== $quantityLength) {
-            throw new InvalidRequestException;
-        }
-
-        if (0 < $allowOverdraftLength && $itemCodeLength !== $allowOverdraftLength) {
-            throw new InvalidRequestException;
-        }
-
-        if (1000 < $itemCodeLength) {
-            throw new InvalidRequestException;
-        }
-
-        $this->params['item_code'] = join(',', $this->itemCode);
-        $this->params['quantity'] = join(',', $this->quantity);
-
-        if (0 < $allowOverdraftLength) {
-            $this->params['allow_overdraft'] = join(',', $this->allowOverdraft);
-        }
-
         if (! isset($this->params['seller_id'])) {
             throw new InvalidRequestException;
         }
 
-        if (! strlen($this->params['item_code']) > 0) {
+        if (! isset($this->params['item_code'])) {
             throw new InvalidRequestException;
         }
 
-        if (! strlen($this->params['quantity']) > 0) {
+        if (! isset($this->params['quantity'])) {
             throw new InvalidRequestException;
         }
     }
