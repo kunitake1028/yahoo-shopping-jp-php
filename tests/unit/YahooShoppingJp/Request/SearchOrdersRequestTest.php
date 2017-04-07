@@ -1,7 +1,9 @@
 <?php
 
+namespace Shippinno\YahooShoppingJp\Request;
+
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
-use Shippinno\YahooShoppingJp\Request\SearchOrdersRequest;
 
 class SearchOrdersRequestTest extends TestCase
 {
@@ -20,9 +22,9 @@ class SearchOrdersRequestTest extends TestCase
 
     /**
      * @test
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
-    public function test_it_cannot_set_seller_id_more_than_once()
+    public function it_cannot_set_seller_id_more_than_once()
     {
         $request = new SearchOrdersRequest;
         $this->assertSame($request, $request->setSellerId('SELLER_ID_1'));
@@ -49,7 +51,7 @@ class SearchOrdersRequestTest extends TestCase
 
     /**
      * @test
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function it_cannot_set_ordered_datetime_range_when_to_is_earlier_than_from()
     {
@@ -85,9 +87,9 @@ class SearchOrdersRequestTest extends TestCase
 
     /**
      * @test
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
-    public function test_it_cannot_set_from_of_ordered_datetime_range_more_than_once()
+    public function it_cannot_set_from_of_ordered_datetime_range_more_than_once()
     {
         $request = new SearchOrdersRequest;
         $this->assertSame($request, $request->setOrderedDateTimeRange(new DateTimeImmutable, null));
@@ -97,9 +99,9 @@ class SearchOrdersRequestTest extends TestCase
 
     /**
      * @test
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
-    public function test_it_cannot_set_to_of_ordered_datetime_range_more_than_once()
+    public function it_cannot_set_to_of_ordered_datetime_range_more_than_once()
     {
         $request = new SearchOrdersRequest;
         $this->assertSame($request, $request->setOrderedDateTimeRange(null, new DateTimeImmutable));
@@ -109,9 +111,9 @@ class SearchOrdersRequestTest extends TestCase
 
     /**
      * @test
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
-    public function test_it_cannot_set_ordered_datetime_range_to_both_null()
+    public function it_cannot_set_ordered_datetime_range_to_both_null()
     {
         $request = new SearchOrdersRequest;
 
@@ -121,7 +123,7 @@ class SearchOrdersRequestTest extends TestCase
     /**
      * @test
      */
-    public function test_it_sets_offset()
+    public function it_sets_offset()
     {
         $request = new SearchOrdersRequest;
         $this->assertSame($request, $request->setSellerId('SELLER_ID'));
@@ -135,9 +137,9 @@ class SearchOrdersRequestTest extends TestCase
 
     /**
      * @test
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
-    public function test_it_cannot_set_offset_more_than_once()
+    public function it_cannot_set_offset_more_than_once()
     {
         $request = new SearchOrdersRequest;
         $this->assertSame($request, $request->setSellerId('SELLER_ID'));
@@ -148,9 +150,9 @@ class SearchOrdersRequestTest extends TestCase
 
     /**
      * @test
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
-    public function test_it_cannot_set_offset_to_less_than_zero()
+    public function it_cannot_set_offset_to_less_than_zero()
     {
         $request = new SearchOrdersRequest;
 
@@ -163,7 +165,7 @@ class SearchOrdersRequestTest extends TestCase
     /**
      * @test
      */
-    public function test_it_sets_limit()
+    public function it_sets_limit()
     {
         $request = new SearchOrdersRequest;
         $this->assertSame($request, $request->setSellerId('SELLER_ID'));
@@ -177,9 +179,9 @@ class SearchOrdersRequestTest extends TestCase
 
     /**
      * @test
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
-    public function test_it_cannot_set_limit_more_than_once()
+    public function it_cannot_set_limit_more_than_once()
     {
         $request = new SearchOrdersRequest;
         $this->assertSame($request, $request->setSellerId('SELLER_ID'));
@@ -190,9 +192,9 @@ class SearchOrdersRequestTest extends TestCase
 
     /**
      * @test
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
-    public function test_it_cannot_set_limit_to_less_than_zero()
+    public function it_cannot_set_limit_to_less_than_zero()
     {
         $request = new SearchOrdersRequest;
 
@@ -203,7 +205,7 @@ class SearchOrdersRequestTest extends TestCase
      * @test
      * @expectedException \Shippinno\YahooShoppingJp\Exception\InvalidRequestException
      */
-    public function test_it_validates_that_seller_id_is_set()
+    public function it_validates_that_seller_id_is_set()
     {
         $request = new SearchOrdersRequest;
 
