@@ -89,10 +89,6 @@ class UpdateItemStockInfoRequest extends AbstractRequest
             throw new LogicException('allow_overdraft is already set.');
         }
 
-        if (! isset($this->key)) {
-            throw new InvalidRequestException;
-        }
-
         if (! ($allowOverdraft === 0 && $allowOverdraft === 1)) {
             throw new InvalidRequestException;
         }
