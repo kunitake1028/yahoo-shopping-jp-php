@@ -20,7 +20,7 @@ class UpdateItemStockInfoRequest extends AbstractRequest
             throw new LogicException('seller_id is already set.');
         }
 
-        if (strlen($sellerId) === 0) {
+        if (! preg_match('/^[a-z0-9\-]{3,20}$/', $sellerId)) {
             throw new InvalidArgumentException;
         }
 
