@@ -20,7 +20,9 @@ $factory = new GetItemStockInfoFactory;
 
 $request = $factory->request();
 $request->setSellerId($sellerId);
-$request->setItemCodeList($itemCodeList);
+foreach ($itemCodeList as $itemCode) {
+    $request->addItemCode($itemCode);
+}
 
 $client = new Client(
     file_get_contents(__DIR__.'/access_token.txt'),

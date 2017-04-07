@@ -6,7 +6,15 @@ use LogicException;
 
 class GetItemStockInfoRequest extends AbstractRequest
 {
+    /**
+     * @var array
+     */
     private $params = [];
+
+    /**
+     * @var array
+     */
+    private $itemCodeList = [];
 
     public function __construct()
     {
@@ -29,20 +37,20 @@ class GetItemStockInfoRequest extends AbstractRequest
     }
 
     /**
-     * @param array $itemCodeList
+     * @param string $itemCode
      * @return self
      */
-    public function setItemCodeList(array $itemCodeList): self
+    public function addItemCode(string $itemCode): self
     {
-        if (isset($this->params['item_code'])) {
-            throw new LogicException('item_code is already set.');
+        if (strlen($itemCode) >= 99) {
+            throw new LogicException('The itemCode must be less than 99 characters.');
         }
 
-        if (count($itemCodeList) > 1000) {
-            throw new LogicException('The number of elements of the itemCodeList array must be less than 1000.');
+        if (count($this->itemCodeList) >= 1000) {
+            throw new LogicException('The number of the itemCode must be less than 1000.');
         }
 
-        $this->params['item_code'] = implode(',', $itemCodeList);
+        $this->itemCodeList[] = $itemCode;
 
         return $this;
     }
@@ -52,6 +60,8 @@ class GetItemStockInfoRequest extends AbstractRequest
      */
     public function getParams(): array
     {
+        $this->params['item_code'] = implode(',', $this->itemCodeList);
+
         return $this->params;
     }
 }
