@@ -1,6 +1,6 @@
 {
     "name": "shippinno/yahoo-shopping-jp-php",
-    "description": "Yahoo Shopping API client in PHP."
+    "description": "Yahoo Shopping API client in PHP.",
     "type": "library",
     "license": "proprietary",
     "authors": [
@@ -44,6 +44,11 @@
     "autoload": {
         "psr-4": {
             "Shippinno\\YahooShoppingJp\\": "src/YahooShoppingJp"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Shippinno\\YahooShoppingJp\\": "tests/YahooShoppingJp"
         }
     },
     "repositories": [

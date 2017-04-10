@@ -4,6 +4,7 @@ namespace Shippinno\YahooShoppingJp\Request;
 
 use DateTimeImmutable;
 use FluidXml\FluidXml;
+use InvalidArgumentException;
 use LogicException;
 use Shippinno\YahooShoppingJp\Exception\InvalidRequestException;
 
@@ -51,6 +52,16 @@ class SearchOrdersRequest extends AbstractRequest
      */
     public function setOrderedDateTimeRange(DateTimeImmutable $from = null, DateTimeImmutable $to = null): self
     {
+        if (null === $from && null === $to) {
+            throw new InvalidArgumentException('Either OrderTimeFrom or OrderTimeTo has to be set.');
+        }
+
+        if (null !== $from &&
+            null !== $to &&
+            $from > $to) {
+            throw new LogicException('OrderTimeFrom has to be earlier than OrderTimeTo.');
+        }
+
         if (isset($this->params['Search']['Condition']['OrderTimeFrom'])) {
             throw new LogicException('OrderTimeFrom is already set.');
         }
@@ -76,11 +87,15 @@ class SearchOrdersRequest extends AbstractRequest
      */
     public function setOffset(int $offset): self
     {
+        if ($offset < 0) {
+            throw new InvalidArgumentException;
+        }
+
         if (isset($this->params['Search']['Start'])) {
             throw new LogicException('Start is already set.');
         }
 
-        $this->params['Search']['Start'] = $offset;
+        $this->params['Search']['Start'] = $offset + 1;
 
         return $this;
     }
@@ -91,7 +106,11 @@ class SearchOrdersRequest extends AbstractRequest
      */
     public function setLimit(int $limit): self
     {
-        if (isset($params['Search']['Result'])) {
+        if ($limit < 0) {
+            throw new InvalidArgumentException;
+        }
+
+        if (isset($this->params['Search']['Result'])) {
             throw new LogicException('Result is already set.');
         }
 
