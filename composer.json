@@ -1,15 +1,33 @@
 {
     "name": "shippinno/yahoo-shopping-jp-php",
+    "description": "Yahoo Shopping API client in PHP.",
     "type": "library",
-    "autoload": {
-        "psr-4": {
-            "Shippinno\\YahooShoppingJp\\": "src/YahooShoppingJp"
-        }
-    },
-    "repositories": [
+    "license": "proprietary",
+    "authors": [
         {
-            "type": "vcs",
-            "url": "https://github.com/yahoojapan/yconnect-php-sdk"
+            "name": "Tadashi Gondo",
+            "email": "tadashi.gondo@shippinno.co.jp",
+            "role": "Developer"
+        },
+        {
+            "name": "Eiji Muraguchi",
+            "email": "eiji.muraguchi@shippinno.co.jp",
+            "role": "Developer"
+        },
+        {
+            "name": "Yuji Fukui",
+            "email": "yuji.fukui@shippinno.co.jp",
+            "role": "Developer"
+        },
+        {
+            "name": "Aya Kanazawa",
+            "email": "ayazarashi@gmail.com",
+            "role": "Developer"
+        },
+        {
+            "name": "Hirofumi Tanigami",
+            "email": "tanigami@wagg.jp",
+            "role": "Developer"
         }
     ],
     "require": {
@@ -22,5 +40,21 @@
         "friendsofphp/php-cs-fixer": "^2.1",
         "mockery/mockery": "^0.9.9",
         "phpunit/phpunit": "^6.0"
-    }
+    },
+    "autoload": {
+        "psr-4": {
+            "Shippinno\\YahooShoppingJp\\": "src/YahooShoppingJp"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Shippinno\\YahooShoppingJp\\": "tests/YahooShoppingJp"
+        }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/yahoojapan/yconnect-php-sdk"
+        }
+    ]
 }
