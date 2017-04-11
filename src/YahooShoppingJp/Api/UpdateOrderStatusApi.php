@@ -3,6 +3,7 @@
 namespace Shippinno\YahooShoppingJp\Api;
 
 use Shippinno\YahooShoppingJp\HttpMethod;
+use Shippinno\YahooShoppingJp\Exception\DistillationException;
 
 class UpdateOrderStatusApi extends AbstractApi
 {
@@ -12,6 +13,10 @@ class UpdateOrderStatusApi extends AbstractApi
      */
     public function distillResponse(array $response): array
     {
+        if ($response['Result']['Status'] !== 'OK') {
+            throw new DistillationException;
+        }
+
         return $response;
     }
 
