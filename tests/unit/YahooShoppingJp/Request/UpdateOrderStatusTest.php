@@ -5,7 +5,6 @@ namespace Shippinno\YahooShoppingJp\Request;
 use PHPUnit\Framework\TestCase;
 use Shippinno\YahooShoppingJp\Enum\OrderStatus;
 use Shippinno\YahooShoppingJp\Enum\CancelReason;
-use Shippinno\YahooShoppingJp\Exception\InvalidRequestException;
 
 class UpdateOrderStatusTest extends TestCase
 {
@@ -150,7 +149,7 @@ class UpdateOrderStatusTest extends TestCase
 
     /**
      * @test
-     * @expectedException \InvalidRequestException
+     * @expectedException Shippinno\YahooShoppingJp\Exception\InvalidRequestException
      */
     public function validate_OrderStatus_and_IsPointFix()
     {
