@@ -15,11 +15,6 @@ class UpdateOrderStatusRequest extends AbstractRequest
      */
     private $params = [];
 
-    public function __construct()
-    {
-        
-    }
-
     /**
      * 【必須】ストアアカウント
      *
@@ -155,7 +150,7 @@ class UpdateOrderStatusRequest extends AbstractRequest
             throw new InvalidRequestException;
         }
         // ※注文ステータスを「完了」に変更する際は、必ずポイント確定要否をtrueに指定してください。
-        if ($this->params['Order']['OrderStatus'] === OrderStatus::PROCESSED() && $this->params['Target']['IsPointFix'] === false) {
+        if ($this->params['Order']['OrderStatus'] === OrderStatus::PROCESSED()->getValue() && $this->params['Target']['IsPointFix'] === 'false') {
             throw new InvalidRequestException;
         }
     }
