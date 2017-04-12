@@ -13,7 +13,7 @@ class UpdateOrderStatusApi extends AbstractApi
      */
     public function distillResponse(array $response): array
     {
-        if ($response['Result']['Status'] !== 'OK') {
+        if (!isset($response['Result'])) {
             throw new DistillationException;
         }
 
