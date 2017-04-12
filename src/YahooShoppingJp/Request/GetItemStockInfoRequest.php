@@ -11,11 +11,6 @@ class GetItemStockInfoRequest extends AbstractRequest
      */
     private $params = [];
 
-    /**
-     * @var array
-     */
-    private $itemCodeList = [];
-
     public function __construct()
     {
         //
@@ -46,11 +41,11 @@ class GetItemStockInfoRequest extends AbstractRequest
             throw new LogicException('The itemCode must be less than 99 characters.');
         }
 
-        if (count($this->itemCodeList) >= 1000) {
+        if (count($this->params['itemCodeList']) >= 1000) {
             throw new LogicException('The number of the itemCode must be less than 1000.');
         }
 
-        $this->itemCodeList[] = $itemCode;
+        $this->params['itemCodeList'][] = $itemCode;
 
         return $this;
     }
@@ -60,7 +55,7 @@ class GetItemStockInfoRequest extends AbstractRequest
      */
     public function getParams(): array
     {
-        $this->params['item_code'] = implode(',', $this->itemCodeList);
+        $this->params['item_code'] = implode(',', $this->params['itemCodeList']);
 
         return $this->params;
     }
