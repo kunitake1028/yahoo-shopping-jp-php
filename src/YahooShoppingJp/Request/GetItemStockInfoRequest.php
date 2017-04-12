@@ -11,11 +11,6 @@ class GetItemStockInfoRequest extends AbstractRequest
      */
     private $params = [];
 
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * @param string $sellerId
      * @return self
