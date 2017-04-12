@@ -21,8 +21,8 @@ class UpdateOrderStatusTest extends TestCase
         $this->OrderId       = 'ORDER_ID';
         $this->IsPointFix    = true;
         $this->OrderStatus   = OrderStatus::PROCESSED();
-        $this->CancelReason  = CancelReason::ADDRESS_UNKNOWN();
         $this->OperationUser = 'OPERATION_USER';
+        $this->CancelReason  = CancelReason::ADDRESS_UNKNOWN();
     }
 
     /**
@@ -38,6 +38,7 @@ class UpdateOrderStatusTest extends TestCase
         $this->assertSame($request, $request->setIsPointFix($this->IsPointFix));
         $this->assertSame($request, $request->setOrderStatus($this->OrderStatus));
         $this->assertSame($request, $request->setOperationUser($this->OperationUser));
+        $this->assertSame($request, $request->setCancelReason($this->CancelReason));
 
         return $request;
     }
@@ -113,7 +114,7 @@ class UpdateOrderStatusTest extends TestCase
     {
         $simpleXml = simplexml_load_string($instance->getParams());
 
-        $this->assertEquals($this->OrderStatus, $simpleXml->Order->OrderStatus->__toString());
+        $this->assertEquals($this->OrderStatus->getValue(), $simpleXml->Order->OrderStatus->__toString());
     }
 
     /**
@@ -145,6 +146,83 @@ class UpdateOrderStatusTest extends TestCase
         $simpleXml = simplexml_load_string($instance->getParams());
 
         $this->assertEquals($this->OperationUser, $simpleXml->Target->OperationUser->__toString());
+    }
+
+    /**
+     * @test
+     * @depends create_instance
+     * @expectedException \LogicException
+     */
+    public function set_CancelReason_once($incetance)
+    {
+        $incetance->setCancelReason($this->CancelReason);
+    }
+
+    /**
+     * @test
+     * @depends create_instance
+     */
+    public function check_CancelReason_value($instance)
+    {
+        $simpleXml = simplexml_load_string($instance->getParams());
+
+        $this->assertEquals($this->CancelReason->getValue(), $simpleXml->Order->CancelReason->__toString());
+    }
+
+    /**
+     * @test
+     * @expectedException Shippinno\YahooShoppingJp\Exception\InvalidRequestException
+     */
+    public function validate_not_set_SellerId()
+    {
+        $request = (new UpdateOrderStatusRequest)
+            ->setOrderId($this->OrderId)
+            ->setIsPointFix($this->IsPointFix)
+            ->setOrderStatus($this->OrderStatus);
+
+        $request->getParams();
+    }
+
+    /**
+     * @test
+     * @expectedException Shippinno\YahooShoppingJp\Exception\InvalidRequestException
+     */
+    public function validate_not_set_OrderId()
+    {
+        $request = (new UpdateOrderStatusRequest)
+            ->setSellerId($this->SellerId)
+            ->setIsPointFix($this->IsPointFix)
+            ->setOrderStatus($this->OrderStatus);
+
+        $request->getParams();
+    }
+
+    /**
+     * @test
+     * @expectedException Shippinno\YahooShoppingJp\Exception\InvalidRequestException
+     */
+    public function validate_not_set_IsPointFix()
+    {
+        $request = (new UpdateOrderStatusRequest)
+            ->setSellerId($this->SellerId)
+            ->setOrderId($this->OrderId)
+            ->setOrderStatus($this->OrderStatus);
+
+        $request->getParams();
+    }
+
+    /**
+     * @test
+     * @expectedException Shippinno\YahooShoppingJp\Exception\InvalidRequestException
+     */
+    public function validate_not_set_OrderStatus()
+    {
+        $request = (new UpdateOrderStatusRequest)
+            ->setSellerId($this->SellerId)
+            ->setOrderId($this->OrderId)
+            ->setIsPointFix($this->IsPointFix);
+
+        $request->getParams();
     }
 
     /**
