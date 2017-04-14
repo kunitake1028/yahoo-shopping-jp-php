@@ -4,6 +4,7 @@ namespace Shippinno\YahooShoppingJp\Request;
 
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
+use Shippinno\YahooShoppingJp\Enum\ShipMethod;
 use Shippinno\YahooShoppingJp\Enum\ShipStatus;
 
 class UpdateOrderShippingStatusRequestTest extends TestCase
@@ -166,10 +167,10 @@ class UpdateOrderShippingStatusRequestTest extends TestCase
                 ->setOrderId('ORDER_ID')
                 ->setIsPointFix(false)
                 ->setShipStatus(ShipStatus::SHIPPABLE())
-                ->setShipMethod('postage16'));
+                ->setShipMethod(ShipMethod::METHOD1()));
         $simpleXml = simplexml_load_string($request->getParams());
 
-        $this->assertEquals('postage16', $simpleXml->Order->Ship->ShipMethod->__toString());
+        $this->assertEquals(ShipMethod::METHOD1()->getValue(), $simpleXml->Order->Ship->ShipMethod->__toString());
     }
 
     /**
@@ -179,19 +180,9 @@ class UpdateOrderShippingStatusRequestTest extends TestCase
     public function it_cannot_set_ship_method_more_than_once()
     {
         $request = new UpdateOrderShippingStatusRequest;
-        $this->assertSame($request, $request->setShipMethod('postage1'));
+        $this->assertSame($request, $request->setShipMethod(ShipMethod::METHOD1()));
 
-        $request->setShipMethod('postage2');
-    }
-
-    /**
-     * @test
-     * @expectedException \InvalidArgumentException
-     */
-    public function it_cannot_set_ship_method_invalid_string()
-    {
-        $request = new UpdateOrderShippingStatusRequest;
-        $request->setShipMethod('postageXX');
+        $request->setShipMethod(ShipMethod::METHOD2());
     }
 
     /**
@@ -231,16 +222,7 @@ class UpdateOrderShippingStatusRequestTest extends TestCase
     public function it_cannot_set_ship_notes_too_long_string()
     {
         $request = new UpdateOrderShippingStatusRequest;
-        $longStr = '12345678901234567890123456789012345678901234567890'
-            .'12345678901234567890123456789012345678901234567890'
-            .'12345678901234567890123456789012345678901234567890'
-            .'12345678901234567890123456789012345678901234567890'
-            .'12345678901234567890123456789012345678901234567890'
-            .'12345678901234567890123456789012345678901234567890'
-            .'12345678901234567890123456789012345678901234567890'
-            .'12345678901234567890123456789012345678901234567890'
-            .'12345678901234567890123456789012345678901234567890'
-            .'12345678901234567890123456789012345678901234567890x';
+        $longStr = str_pad('SHIP_NOTES', 501, "_", STR_PAD_BOTH);
         $request->setShipNotes($longStr);
     }
 
