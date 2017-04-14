@@ -6,6 +6,7 @@ use DateTimeZone;
 use FluidXml\FluidXml;
 use InvalidArgumentException;
 use LogicException;
+use Shippinno\YahooShoppingJp\Enum\ShipMethod;
 use Shippinno\YahooShoppingJp\Enum\ShipStatus;
 use Shippinno\YahooShoppingJp\Exception\InvalidRequestException;
 
@@ -105,7 +106,7 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
             throw new LogicException('ShipMethod is already set.');
         }
 
-        $this->params['Order']['Ship']['ShipMethod'] = $shipMethod->getValue;
+        $this->params['Order']['Ship']['ShipMethod'] = $shipMethod->getValue();
 
         return $this;
     }
