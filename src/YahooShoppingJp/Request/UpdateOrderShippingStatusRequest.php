@@ -9,13 +9,16 @@ use LogicException;
 use Shippinno\YahooShoppingJp\Enum\ShipStatus;
 use Shippinno\YahooShoppingJp\Exception\InvalidRequestException;
 
+/**
+ * Class UpdateOrderShippingStatusRequest
+ * @package Shippinno\YahooShoppingJp\Request
+ */
 class UpdateOrderShippingStatusRequest extends AbstractRequest
 {
+    /**
+     * @var array
+     */
     private $params = [];
-
-    public function __construct()
-    {
-    }
 
     /**
      * @param string $sellerId
@@ -93,22 +96,16 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
     }
 
     /**
-     * @param string $shipMethod
+     * @param ShipMethod $shipMethod
      * @return self
      */
-    public function setShipMethod(string $shipMethod): self
+    public function setShipMethod(ShipMethod $shipMethod): self
     {
         if (isset($this->params['Order']['Ship']['ShipMethod'])) {
             throw new LogicException('ShipMethod is already set.');
         }
 
-        if(!preg_match('/^postage(\d+)$/',$shipMethod,$m)
-            || !in_array($m[1],['1','2','3','4','5','6','7','8',
-                '9','10','11','12','13','14','16'])){
-            throw new InvalidArgumentException('ShipMethod is invalid.');
-        }
-
-        $this->params['Order']['Ship']['ShipMethod'] = $shipMethod;
+        $this->params['Order']['Ship']['ShipMethod'] = $shipMethod->getValue;
 
         return $this;
     }

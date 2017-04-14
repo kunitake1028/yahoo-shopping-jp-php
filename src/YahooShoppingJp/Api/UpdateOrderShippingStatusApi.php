@@ -28,11 +28,19 @@ class UpdateOrderShippingStatusApi extends AbstractApi
      */
     public function distillResponse(array $response): array
     {
-        if(! isset($response['Result']['Status'])) {
+        if(! isset($response['Result']['Status'])
+        || $response['Result']['Status'] !== 'OK') {
             throw new DistillationException;
         }
 
-        //エラー情報はどうする？
-        return $response['Result']['Status'];
+        return array();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function expectsFormFields(): bool
+    {
+        return false;
     }
 }

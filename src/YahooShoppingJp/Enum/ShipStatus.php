@@ -14,27 +14,27 @@ use MyCLabs\Enum\Enum;
 class ShipStatus extends Enum
 {
     /**
-     * @var integer
+     * @var string
      */
-    const UNSHIPPABLE = 0;
+    const UNSHIPPABLE = '0';
 
     /**
-     * @var integer
+     * @var string
      */
-    const SHIPPABLE = 1;
+    const SHIPPABLE = '1';
 
     /**
-     * @var integer
+     * @var string
      */
-    const WAITING = 2;
+    const WAITING = '2';
 
     /**
-     * @var integer
+     * @var string
      */
-    const SHIPPED = 3;
+    const SHIPPED = '3';
 
     /**
-     * @var integer
+     * @var string
      */
-    const DELIVERED = 4;
+    const DELIVERED = '4';
 }
