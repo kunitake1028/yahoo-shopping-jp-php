@@ -42,16 +42,14 @@ class UpdateItemStockInfoRequest extends AbstractRequest
         }
 
         if (! preg_match('/^[a-zA-Z0-9\-]{1,99}$/', $itemCode)) {
-            throw new InvalidRequestException;
+            throw new InvalidRequestException('item_code error.');
         }
-
-        if (! preg_match('/^[a-zA-Z0-9\-]{0,99}$/', $subCode)) {
-            throw new InvalidRequestException;
-        }
-
         $this->params['item_code'] = $itemCode;
 
         if (strlen($subCode)) {
+            if (! preg_match('/^[a-zA-Z0-9\-]{1,99}$/', $subCode)) {
+                throw new InvalidRequestException('sub_code error.');
+            }
             $this->params['item_code'] = $this->params['item_code'].':'.$subCode;
         }
 
@@ -70,7 +68,7 @@ class UpdateItemStockInfoRequest extends AbstractRequest
         }
 
         if (! preg_match('/^((\+|-)?[0-9]{1,9}|INI)$/', $quantity)) {
-            throw new InvalidRequestException;
+            throw new InvalidRequestException('Only number or INI can be set.');
         }
 
         $this->params['quantity'] = is_int($quantity) ? strval($quantity) : $quantity;
@@ -79,21 +77,16 @@ class UpdateItemStockInfoRequest extends AbstractRequest
     }
 
     /**
-     * @param int $allowOverdraft
+     * @param bool $allowOverdraft
      * @return self
-     * @throws InvalidRequestException
      */
-    public function setAllowOverdraft(int $allowOverdraft): self
+    public function setAllowOverdraft(bool $allowOverdraft): self
     {
         if (isset($this->params['allow_overdraft'])) {
             throw new LogicException('allow_overdraft is already set.');
         }
 
-        if (! ($allowOverdraft === 0 && $allowOverdraft === 1)) {
-            throw new InvalidRequestException;
-        }
-
-        $this->params['allow_overdraft'] = $allowOverdraft;
+        $this->params['allow_overdraft'] = (int) $allowOverdraft;
 
         return $this;
     }
@@ -114,15 +107,15 @@ class UpdateItemStockInfoRequest extends AbstractRequest
     private function validateRequest(): void
     {
         if (! isset($this->params['seller_id'])) {
-            throw new InvalidRequestException;
+            throw new InvalidRequestException('seller_id is not set.');
         }
 
         if (! isset($this->params['item_code'])) {
-            throw new InvalidRequestException;
+            throw new InvalidRequestException('item_code is not set.');
         }
 
         if (! isset($this->params['quantity'])) {
-            throw new InvalidRequestException;
+            throw new InvalidRequestException('quantity is not set.');
         }
     }
 }
