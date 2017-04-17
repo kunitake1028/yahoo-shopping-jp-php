@@ -34,8 +34,12 @@ class GetItemStockInfoRequest extends AbstractRequest
      */
     public function addItemCode(string $itemCode): self
     {
-        if (strlen($itemCode) >= 99) {
-            throw new InvalidArgumentException('The itemCode must be less than 99 characters.');
+        if (strlen($itemCode) === 0) {
+            throw new InvalidArgumentException('The item_code cannot be empty.');
+        }
+
+        if (strlen($itemCode) > 99) {
+            throw new InvalidArgumentException('The item_code must be less than 99 characters.');
         }
 
         $this->params['itemCodeList'][] = $itemCode;
@@ -64,8 +68,12 @@ class GetItemStockInfoRequest extends AbstractRequest
             throw new InvalidRequestException;
         }
 
+        if (count(array_unique($this->params['itemCodeList'])) < count($this->params['itemCodeList'])) {
+            throw new LogicException('Some of item_code are duplicated.');
+        }
+
         if (count($this->params['itemCodeList']) >= 1000) {
-            throw new LogicException('The number of the itemCode must be less than 1000.');
+            throw new LogicException('The number of the item_code must be less than 1000.');
         }
     }
 
