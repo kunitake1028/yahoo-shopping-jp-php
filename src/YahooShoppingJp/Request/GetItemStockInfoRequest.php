@@ -2,7 +2,9 @@
 
 namespace Shippinno\YahooShoppingJp\Request;
 
+use InvalidArgumentException;
 use LogicException;
+use Shippinno\YahooShoppingJp\Exception\InvalidRequestException;
 
 class GetItemStockInfoRequest extends AbstractRequest
 {
@@ -33,11 +35,7 @@ class GetItemStockInfoRequest extends AbstractRequest
     public function addItemCode(string $itemCode): self
     {
         if (strlen($itemCode) >= 99) {
-            throw new LogicException('The itemCode must be less than 99 characters.');
-        }
-
-        if (count($this->params['itemCodeList']) >= 1000) {
-            throw new LogicException('The number of the itemCode must be less than 1000.');
+            throw new InvalidArgumentException('The itemCode must be less than 99 characters.');
         }
 
         $this->params['itemCodeList'][] = $itemCode;
@@ -50,8 +48,25 @@ class GetItemStockInfoRequest extends AbstractRequest
      */
     public function getParams(): array
     {
+        $this->validateRequest();
+
         $this->params['item_code'] = implode(',', $this->params['itemCodeList']);
 
         return $this->params;
     }
+
+    /**
+     * @throws InvalidRequestException
+     */
+    private function validateRequest(): void
+    {
+        if (! isset($this->params['seller_id'])) {
+            throw new InvalidRequestException;
+        }
+
+        if (count($this->params['itemCodeList']) >= 1000) {
+            throw new LogicException('The number of the itemCode must be less than 1000.');
+        }
+    }
+
 }
