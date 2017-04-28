@@ -3,12 +3,13 @@
 namespace Shippinno\YahooShoppingJp\Request;
 
 use DateTimeZone;
-use FluidXml\FluidXml;
 use InvalidArgumentException;
 use LogicException;
+use Shippinno\YahooShoppingJp\Api\UpdateOrderShippingStatusApi;
 use Shippinno\YahooShoppingJp\Enum\ShipMethod;
 use Shippinno\YahooShoppingJp\Enum\ShipStatus;
 use Shippinno\YahooShoppingJp\Exception\InvalidRequestException;
+use Shippinno\YahooShoppingJp\Response\UpdateOrderShippingStatusResponse;
 
 /**
  * Class UpdateOrderShippingStatusRequest
@@ -210,22 +211,9 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
     }
 
     /**
-     * @return string
-     */
-    public function getParams(): string
-    {
-        $this->validateRequest();
-
-        $fluidXml = new FluidXml('Req');
-        $fluidXml->add($this->params);
-
-        return $fluidXml->xml();
-    }
-
-    /**
      * @throws InvalidRequestException
      */
-    private function validateRequest(): void
+    protected function validateParams(): void
     {
         if (!isset($this->params['SellerId'])) {
             throw new InvalidRequestException('SellerId is required.');
@@ -243,4 +231,21 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
             throw new InvalidRequestException('ShipStatus is required.');
         }
     }
+
+    /**
+     * @return UpdateOrderShippingStatusApi
+     */
+    public function api()
+    {
+        return new UpdateOrderShippingStatusApi();
+    }
+
+    /**
+     * @return UpdateOrderShippingStatusResponse
+     */
+    public function response()
+    {
+        return new UpdateOrderShippingStatusResponse();
+    }
+
 }
