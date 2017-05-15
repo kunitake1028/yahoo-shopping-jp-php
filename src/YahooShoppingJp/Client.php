@@ -156,7 +156,14 @@ class Client
     {
         $fluidXml = new FluidXml('Req');
         $fluidXml->add($request->getParams());
-        $options['form'] = $fluidXml->xml();
+        /*
+         * form_paramsかbodyに入れないとリクエスト内容が空になってしまう。
+         * `expectsFormFields()`を使っていたのはどこに？
+         * ↓
+         */
+//        $options['form'] = $fluidXml->xml();
+        $options['body'] = $fluidXml->xml();
+
 
         return $options;
     }

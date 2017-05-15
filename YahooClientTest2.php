@@ -5,7 +5,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Shippinno\YahooShoppingJp\Client;
 use Shippinno\YahooShoppingJp\Enum\ShipStatus;
-use Shippinno\YahooShoppingJp\Factory\UpdateOrderShippingStatusFactory;
+use Shippinno\YahooShoppingJp\Request\UpdateOrderShippingStatusRequest;
 
 
 define('YAHOO_APP_ID', 'dj0zaiZpPUZFNTFuUUQ3Q2piSSZzPWNvbnN1bWVyc2VjcmV0Jng9MWY-');
@@ -19,17 +19,14 @@ $client = new Client(
 );
 
 try{
-    $factory = new UpdateOrderShippingStatusFactory();
+    $request = new UpdateOrderShippingStatusRequest();
 
-    $client->setApi($factory->api());
-    $request = $factory->request();
     $request = $request
                         ->setSellerId($seller_id)
                         ->setOrderId('hogehoge')
                         ->setIsPointFix(true)
                         ->setShipStatus(ShipStatus::UNSHIPPABLE());
 
-    //$options['body'] = $fluidXml->xml();で通る
     $response = $client->execute($request);
 
     var_dump($response);

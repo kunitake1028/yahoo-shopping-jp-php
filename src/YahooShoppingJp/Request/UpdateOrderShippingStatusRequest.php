@@ -20,7 +20,7 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
     /**
      * @var array
      */
-    private $params = [];
+    protected $params = [];
 
     /**
      * @param string $sellerId
