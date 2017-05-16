@@ -2,10 +2,15 @@
 
 namespace Shippinno\YahooShoppingJp;
 
-use FluidXml\FluidXml;
 use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
+use GuzzleHttp\Exception\ServerException as GuzzleServerException;
+use GuzzleHttp\Exception\ClientException as GuzzleClientException;
 use Psr\Http\Message\ResponseInterface;
 use Shippinno\YahooShoppingJp\Api\AbstractApi;
+use Shippinno\YahooShoppingJp\Exception\ClientException;
+use Shippinno\YahooShoppingJp\Exception\ConnectException;
+use Shippinno\YahooShoppingJp\Exception\ServerException;
 use Shippinno\YahooShoppingJp\Request\AbstractRequest;
 
 class Client
@@ -46,59 +51,84 @@ class Client
      * @param HttpClient|null $httpClient
      */
     public function __construct(
-    string $accessToken, string $refreshToken, HttpClient $httpClient = null
-    )
-    {
+        string $accessToken,
+        string $refreshToken,
+        HttpClient $httpClient = null
+    ) {
         if (null === $httpClient) {
             $httpClient = new HttpClient([
-              'base_uri' => self::BASE_URL,
+                'base_uri' => self::BASE_URL,
             ]);
         }
 
-        $this->accessToken  = $accessToken;
+        $this->accessToken = $accessToken;
         $this->refreshToken = $refreshToken;
-        $this->httpClient   = $httpClient;
-    }
-
-    /**
-     * @param AbstractApi $api
-     */
-    public function setApi(AbstractApi $api)
-    {
-        $this->api = $api;
+        $this->httpClient = $httpClient;
     }
 
     /**
      * @param AbstractRequest $request
      * @return mixed
+     * @throws ClientException
+     * @throws ConnectException
+     * @throws ServerException
      */
     public function execute(AbstractRequest $request): array
     {
-        $options     = [];
-        $options     = $this->setRequestParams(
-          $options,
-          $request);
-        $options     = $this->setAuthorizationHeader($options);
-        $rawResponse = $this->request($options);
-        $response    = $this->decodeResponse($rawResponse);
+        $this->setApi($request->api());
 
-        return $this->api->distillResponse($response);
+        $options = $this->setAuthorizationHeader($this->setRequestParams($request));
+
+        try {
+            $rawResponse = $this->request($options);
+        } catch (GuzzleClientException $e) {
+            throw new ClientException($e->getMessage(), $e->getCode(), $e);
+        } catch (GuzzleServerException $e) {
+            throw new ServerException($e->getMessage(), $e->getCode(), $e);
+        } catch (GuzzleConnectException $e) {
+            throw new ConnectException($e->getMessage(), $e->getCode(), $e);
+        }
+
+        $distilledResponse = $this->api->distillResponse($this->decodeResponse($rawResponse));
+        $response = $request->response()->setData($distilledResponse);
+
+        return $response;
+    }
+
+    /**
+     * @param AbstractApi $api
+     */
+    private function setApi(AbstractApi $api)
+    {
+        $this->api = $api;
     }
 
     /**
      * @param array $options
+     * @return array
+     */
+    private function setAuthorizationHeader(array $options): array
+    {
+        $options['headers'] = [
+            'Authorization' => 'Bearer ' . $this->accessToken,
+        ];
+
+        return $options;
+    }
+
+    /**
      * @param AbstractRequest $request
      * @return array
      */
-    private function setRequestParams(array $options, AbstractRequest $request): array
+    private function setRequestParams(AbstractRequest $request): array
     {
+        $options = [];
         if ($this->api->httpMethod()->equals(HttpMethod::GET())) {
-            $options = $this->setRequestParamsForGetRequest($options,
-              $request);
-        }
-        elseif ($this->api->httpMethod()->equals(HttpMethod::POST())) {
-            $options = $this->setRequestParamsForPostRequest($options,
-              $request);
+            $options = $this->setRequestParamsForGetRequest($options, $request);
+        } else {
+            if ($this->api->httpMethod()->equals(HttpMethod::POST())) {
+                $options = $this->setRequestParamsForPostRequest($options, $request);
+            }
         }
 
         return $options;
@@ -123,32 +153,15 @@ class Client
      */
     private function setRequestParamsForPostRequest(array $options, AbstractRequest $request): array
     {
-        $fluidXml = new FluidXml('Req');
-        $fluidXml->add($request->getParams());
-        /*
-         * form_paramsかbodyに入れないとリクエスト内容が空になってしまう。
-         * `expectsFormFields()`を使っていたのはどこに？
-         * ↓
-         */
-//        $options['form'] = $fluidXml->xml();
-        $options['body'] = $fluidXml->xml();
-
+        if ($this->api->expectsFormFields()) {
+            $options['form_params'] = $request->getParams();
+        } else {
+            $options['body'] = $request->getParams();
+        }
 
         return $options;
     }
 
-    /**
-     * @param array $options
-     * @return array
-     */
-    private function setAuthorizationHeader(array $options): array
-    {
-        $options['headers'] = [
-          'Authorization' => 'Bearer ' . $this->accessToken,
-        ];
-
-        return $options;
-    }
 
     /**
      * @param $options
@@ -170,15 +183,14 @@ class Client
     private function decodeResponse(ResponseInterface $rawResponse): array
     {
         return json_decode(
-          json_encode(
-            simplexml_load_string(
-              $rawResponse->getBody()->getContents(),
-              null,
-              LIBXML_NOCDATA
-            )
-          ),
-          true
+            json_encode(
+                simplexml_load_string(
+                    $rawResponse->getBody()->getContents(),
+                    null,
+                    LIBXML_NOCDATA
+                )
+            ),
+            true
         );
     }
-
 }
