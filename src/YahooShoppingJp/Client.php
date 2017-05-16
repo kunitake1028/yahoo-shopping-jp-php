@@ -2,6 +2,7 @@
 
 namespace Shippinno\YahooShoppingJp;
 
+use FluidXml\FluidXml;
 use GuzzleHttp\Client as HttpClient;
 use Psr\Http\Message\ResponseInterface;
 use Shippinno\YahooShoppingJp\Api\AbstractApi;
@@ -122,11 +123,16 @@ class Client
      */
     private function setRequestParamsForPostRequest(array $options, AbstractRequest $request): array
     {
-        if ($this->api->expectsFormFields()) {
-            $options['form_params'] = $request->getParams();
-        } else {
-            $options['body'] = $request->getParams();
-        }
+        $fluidXml = new FluidXml('Req');
+        $fluidXml->add($request->getParams());
+        /*
+         * form_paramsかbodyに入れないとリクエスト内容が空になってしまう。
+         * `expectsFormFields()`を使っていたのはどこに？
+         * ↓
+         */
+//        $options['form'] = $fluidXml->xml();
+        $options['body'] = $fluidXml->xml();
+
 
         return $options;
     }
