@@ -6,28 +6,134 @@ use DateTimeImmutable;
 use FluidXml\FluidXml;
 use InvalidArgumentException;
 use LogicException;
+use Shippinno\YahooShoppingJp\Api\AbstractApi;
+use Shippinno\YahooShoppingJp\Api\SearchOrdersApi;
 use Shippinno\YahooShoppingJp\Exception\InvalidRequestException;
+use Shippinno\YahooShoppingJp\Response\AbstractResponse;
+use Shippinno\YahooShoppingJp\Response\SearchOrdersResponse;
 
 class SearchOrdersRequest extends AbstractRequest
 {
-    private $params = [];
 
     public function __construct()
     {
         $this->params['Search']['Field'] = implode(',', [
-            'OrderId', 'Version', 'OriginalOrderId', 'ParentOrderId', 'DeviceType', 'IsSeen', 'IsSplit', 'IsRoyalty',
-            'IsSeller', 'IsAffiliate', 'IsRatingB2s', 'OrderTime', 'ExistMultiReleaseDate', 'ReleaseDate',
-            'LastUpdateTime', 'Suspect', 'OrderStatus', 'StoreStatus', 'RoyaltyFixTime', 'PrintSlipFlag',
-            'PrintDeliveryFlag', 'PrintBillFlag', 'BuyerCommentsFlag', 'PayStatus', 'SettleStatus', 'PayType',
-            'PayMethod', 'PayMethodName', 'PayDate', 'SettleId', 'UseWallet', 'NeedBillSlip', 'NeedDetailedSlip',
-            'NeedReceipt', 'BillFirstName', 'BillFirstNameKana', 'BillLastName', 'BillLastNameKana', 'BillPrefecture',
-            'ShipStatus', 'ShipMethod', 'ShipRequestDate', 'ShipRequestTime', 'ShipNotes', 'ShipInvoiceNumber1',
-            'ShipInvoiceNumber2', 'ArriveType', 'ShipDate', 'NeedGiftWrap', 'NeedGiftWrapMessage', 'NeedGiftWrapPaper',
-            'ShipFirstName', 'ShipFirstNameKana', 'ShipLastName', 'ShipLastNameKana', 'ShipPrefecture', 'PayCharge',
-            'ShipCharge', 'GiftWrapCharge', 'Discount', 'UsePoint', 'TotalPrice', 'RefundTotalPrice', 'UsePointType',
-            'IsGetPointFixAll', 'SellerId', 'IsLogin', 'PayNo', 'PayNoIssueDate', 'SellerType', 'IsPayManagement',
-            'ShipUrl', 'ShipMethodName', 'ArrivalDate', 'TotalMallCouponDiscount',
+            'OrderId',
+            'Version',
+            'OriginalOrderId',
+            'ParentOrderId',
+            'DeviceType',
+            'IsSeen',
+            'IsSplit',
+            'IsRoyalty',
+            'IsSeller',
+            'IsAffiliate',
+            'IsRatingB2s',
+            'OrderTime',
+            'ExistMultiReleaseDate',
+            'ReleaseDate',
+            'LastUpdateTime',
+            'Suspect',
+            'OrderStatus',
+            'StoreStatus',
+            'RoyaltyFixTime',
+            'PrintSlipFlag',
+            'PrintDeliveryFlag',
+            'PrintBillFlag',
+            'BuyerCommentsFlag',
+            'PayStatus',
+            'SettleStatus',
+            'PayType',
+            'PayMethod',
+            'PayMethodName',
+            'PayDate',
+            'SettleId',
+            'UseWallet',
+            'NeedBillSlip',
+            'NeedDetailedSlip',
+            'NeedReceipt',
+            'BillFirstName',
+            'BillFirstNameKana',
+            'BillLastName',
+            'BillLastNameKana',
+            'BillPrefecture',
+            'ShipStatus',
+            'ShipMethod',
+            'ShipRequestDate',
+            'ShipRequestTime',
+            'ShipNotes',
+            'ShipInvoiceNumber1',
+            'ShipInvoiceNumber2',
+            'ArriveType',
+            'ShipDate',
+            'NeedGiftWrap',
+            'NeedGiftWrapMessage',
+            'NeedGiftWrapPaper',
+            'ShipFirstName',
+            'ShipFirstNameKana',
+            'ShipLastName',
+            'ShipLastNameKana',
+            'ShipPrefecture',
+            'PayCharge',
+            'ShipCharge',
+            'GiftWrapCharge',
+            'Discount',
+            'UsePoint',
+            'TotalPrice',
+            'RefundTotalPrice',
+            'UsePointType',
+            'IsGetPointFixAll',
+            'SellerId',
+            'IsLogin',
+            'PayNo',
+            'PayNoIssueDate',
+            'SellerType',
+            'IsPayManagement',
+            'ShipUrl',
+            'ShipMethodName',
+            'ArrivalDate',
+            'TotalMallCouponDiscount',
         ]);
+    }
+
+    /**
+     * @return AbstractApi
+     */
+    public function api()
+    {
+        return new SearchOrdersApi;
+    }
+
+    /**
+     * @return AbstractResponse
+     */
+    public function response()
+    {
+        return new SearchOrdersResponse;
+    }
+
+    /**
+     * @return void
+     */
+    protected function validateParams()
+    {
+        if (!isset($this->params['SellerId'])) {
+            throw new InvalidRequestException;
+        }
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getParams()
+    {
+        $this->validateParams();
+
+        $fluidXml = new FluidXml('Req');
+        $fluidXml->add($this->params);
+
+        return $fluidXml->xml();
     }
 
     /**
@@ -58,7 +164,8 @@ class SearchOrdersRequest extends AbstractRequest
 
         if (null !== $from &&
             null !== $to &&
-            $from > $to) {
+            $from > $to
+        ) {
             throw new LogicException('OrderTimeFrom has to be earlier than OrderTimeTo.');
         }
 
@@ -119,26 +226,4 @@ class SearchOrdersRequest extends AbstractRequest
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getParams()
-    {
-        $this->validateRequest();
-
-        $fluidXml = new FluidXml('Req');
-        $fluidXml->add($this->params);
-
-        return $fluidXml->xml();
-    }
-
-    /**
-     * @throws InvalidRequestException
-     */
-    private function validateRequest(): void
-    {
-        if (! isset($this->params['SellerId'])) {
-            throw new InvalidRequestException;
-        }
-    }
 }

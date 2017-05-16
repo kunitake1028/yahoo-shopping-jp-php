@@ -4,14 +4,37 @@ namespace Shippinno\YahooShoppingJp\Request;
 
 use InvalidArgumentException;
 use LogicException;
+use Shippinno\YahooShoppingJp\Api\GetItemStockInfoApi;
 use Shippinno\YahooShoppingJp\Exception\InvalidRequestException;
+use Shippinno\YahooShoppingJp\Response\GetItemStockInfoResponse;
 
 class GetItemStockInfoRequest extends AbstractRequest
 {
+
+
     /**
-     * @var array
+     * @return GetItemStockInfoApi
      */
-    private $params = [];
+    public function api()
+    {
+        return new GetItemStockInfoApi;
+    }
+
+    /**
+     * @return GetItemStockInfoResponse
+     */
+    public function response()
+    {
+        return new GetItemStockInfoResponse;
+    }
+
+    /**
+     * @return void
+     */
+    protected function validateParams()
+    {
+        // TODO: Implement validateParams() method.
+    }
 
     /**
      * @param string $sellerId

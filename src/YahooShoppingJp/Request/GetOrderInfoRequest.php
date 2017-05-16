@@ -4,10 +4,11 @@ namespace Shippinno\YahooShoppingJp\Request;
 
 use FluidXml\FluidXml;
 use LogicException;
+use Shippinno\YahooShoppingJp\Api\GetOrderInfoApi;
+use Shippinno\YahooShoppingJp\Response\GetOrderInfoResponse;
 
 class GetOrderInfoRequest extends AbstractRequest
 {
-    private $params = [];
 
     public function __construct()
     {
@@ -45,6 +46,41 @@ class GetOrderInfoRequest extends AbstractRequest
     }
 
     /**
+     * @return GetOrderInfoApi
+     */
+    public function api()
+    {
+        return new GetOrderInfoApi;
+    }
+
+    /**
+     * @return GetOrderInfoResponse
+     */
+    public function response()
+    {
+        return new GetOrderInfoResponse;
+    }
+
+    /**
+     * @return void
+     */
+    protected function validateParams()
+    {
+        // TODO: Implement validateParams() method.
+    }
+
+    /**
+     * @return array
+     */
+    public function getParams()
+    {
+        $fluidXml = new FluidXml('Req');
+        $fluidXml->add($this->params);
+
+        return $fluidXml->xml();
+    }
+
+    /**
      * @param string $sellerId
      * @return self
      */
@@ -74,14 +110,4 @@ class GetOrderInfoRequest extends AbstractRequest
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getParams()
-    {
-        $fluidXml = new FluidXml('Req');
-        $fluidXml->add($this->params);
-
-        return $fluidXml->xml();
-    }
 }

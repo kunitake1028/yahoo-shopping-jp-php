@@ -13,14 +13,48 @@ use Shippinno\YahooShoppingJp\Response\UpdateOrderShippingStatusResponse;
 
 /**
  * Class UpdateOrderShippingStatusRequest
+ *
  * @package Shippinno\YahooShoppingJp\Request
  */
 class UpdateOrderShippingStatusRequest extends AbstractRequest
 {
     /**
-     * @var array
+     * @return UpdateOrderShippingStatusApi
      */
-    protected $params = [];
+    public function api()
+    {
+        return new UpdateOrderShippingStatusApi;
+    }
+
+    /**
+     * @return UpdateOrderShippingStatusResponse
+     */
+    public function response()
+    {
+        return new UpdateOrderShippingStatusResponse;
+    }
+
+    /**
+     * @throws InvalidRequestException
+     */
+    protected function validateParams(): void
+    {
+        if (!isset($this->params['SellerId'])) {
+            throw new InvalidRequestException('SellerId is required.');
+        }
+
+        if (!isset($this->params['Target']['OrderId'])) {
+            throw new InvalidRequestException('OrderId is required.');
+        }
+
+        if (!isset($this->params['Target']['IsPointFix'])) {
+            throw new InvalidRequestException('IsPointFix is required.');
+        }
+
+        if (!isset($this->params['Order']['Ship']['ShipStatus'])) {
+            throw new InvalidRequestException('ShipStatus is required.');
+        }
+    }
 
     /**
      * @param string $sellerId
@@ -122,7 +156,7 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
             throw new LogicException('ShipNotes is already set.');
         }
 
-        if(strlen($shipNotes) > 500){
+        if (strlen($shipNotes) > 500) {
             throw new InvalidArgumentException('ShipNotes is invalid.');
         }
 
@@ -171,7 +205,7 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
             throw new LogicException('ShipUrl is already set.');
         }
 
-        $this->params['Order']['Ship']['ShipUrl'] = '![CDATA['.$shipUrl.']]';
+        $this->params['Order']['Ship']['ShipUrl'] = '![CDATA[' . $shipUrl . ']]';
 
         return $this;
     }
@@ -187,8 +221,8 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
         }
 
         $this->params['Order']['Ship']['ShipDate'] = $shipDate
-                                                ->setTimeZone(new DateTimeZone('Asia/Tokyo'))
-                                                ->format('Ymd');
+            ->setTimeZone(new DateTimeZone('Asia/Tokyo'))
+            ->format('Ymd');
 
         return $this;
     }
@@ -204,48 +238,10 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
         }
 
         $this->params['Order']['Ship']['ArrivalDate'] = $arrivalDate
-                                                    ->setTimeZone(new DateTimeZone('Asia/Tokyo'))
-                                                    ->format('Ymd');
+            ->setTimeZone(new DateTimeZone('Asia/Tokyo'))
+            ->format('Ymd');
 
         return $this;
-    }
-
-    /**
-     * @throws InvalidRequestException
-     */
-    protected function validateParams(): void
-    {
-        if (!isset($this->params['SellerId'])) {
-            throw new InvalidRequestException('SellerId is required.');
-        }
-
-        if (!isset($this->params['Target']['OrderId'])) {
-            throw new InvalidRequestException('OrderId is required.');
-        }
-
-        if (!isset($this->params['Target']['IsPointFix'])) {
-            throw new InvalidRequestException('IsPointFix is required.');
-        }
-
-        if (!isset($this->params['Order']['Ship']['ShipStatus'])) {
-            throw new InvalidRequestException('ShipStatus is required.');
-        }
-    }
-
-    /**
-     * @return UpdateOrderShippingStatusApi
-     */
-    public function api()
-    {
-        return new UpdateOrderShippingStatusApi();
-    }
-
-    /**
-     * @return UpdateOrderShippingStatusResponse
-     */
-    public function response()
-    {
-        return new UpdateOrderShippingStatusResponse();
     }
 
 }

@@ -2,25 +2,19 @@
 
 namespace Shippinno\YahooShoppingJp\Request;
 
+use FluidXml\FluidXml;
 use LogicException;
-use Shippinno\YahooShoppingJp\Api\AbstractApi;
 use Shippinno\YahooShoppingJp\Api\UpdateOrderStatusApi;
 use Shippinno\YahooShoppingJp\Exception\InvalidRequestException;
 use Shippinno\YahooShoppingJp\Enum\OrderStatus;
 use Shippinno\YahooShoppingJp\Enum\CancelReason;
-use FluidXml\FluidXml;
-use Shippinno\YahooShoppingJp\Response\AbstractResponse;
 use Shippinno\YahooShoppingJp\Response\UpdateOrderStatusResponse;
 
 class UpdateOrderStatusRequest extends AbstractRequest
 {
-    /**
-     * @var array
-     */
-    private $params = [];
 
     /**
-     * @return AbstractApi
+     * @return UpdateOrderStatusApi
      */
     public function api()
     {
@@ -28,11 +22,47 @@ class UpdateOrderStatusRequest extends AbstractRequest
     }
 
     /**
-     * @return AbstractResponse
+     * @return UpdateOrderStatusResponse
      */
     public function response()
     {
-        new UpdateOrderStatusResponse;
+        return new UpdateOrderStatusResponse;
+    }
+
+    /**
+     * @return void
+     */
+    protected function validateParams(): void
+    {
+        if (!isset($this->params['SellerId'])) {
+            throw new InvalidRequestException;
+        }
+        if (!isset($this->params['Target']['OrderId'])) {
+            throw new InvalidRequestException;
+        }
+        if (!isset($this->params['Target']['IsPointFix'])) {
+            throw new InvalidRequestException;
+        }
+        if (!isset($this->params['Order']['OrderStatus'])) {
+            throw new InvalidRequestException;
+        }
+        // ※注文ステータスを「完了」に変更する際は、必ずポイント確定要否をtrueに指定してください。
+        if ($this->params['Order']['OrderStatus'] === OrderStatus::PROCESSED()->getValue() && $this->params['Target']['IsPointFix'] === 'false') {
+            throw new InvalidRequestException;
+        }
+    }
+
+    /**
+     * @return string
+     */
+    public function getParams()
+    {
+        $this->validateParams();
+
+        $fluidXml = new FluidXml('Req');
+        $fluidXml->add($this->params);
+
+        return $fluidXml->xml();
     }
 
     /**
@@ -139,48 +169,4 @@ class UpdateOrderStatusRequest extends AbstractRequest
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getParams()
-    {
-        $this->validateRequest();
-
-        $fluidXml = new FluidXml('Req');
-        $fluidXml->add($this->params);
-
-        return $fluidXml->xml();
-    }
-
-    /**
-     * @throws InvalidRequestException
-     */
-    private function validateRequest(): void
-    {
-        if (!isset($this->params['SellerId'])) {
-            throw new InvalidRequestException;
-        }
-        if (!isset($this->params['Target']['OrderId'])) {
-            throw new InvalidRequestException;
-        }
-        if (!isset($this->params['Target']['IsPointFix'])) {
-            throw new InvalidRequestException;
-        }
-        if (!isset($this->params['Order']['OrderStatus'])) {
-            throw new InvalidRequestException;
-        }
-        // ※注文ステータスを「完了」に変更する際は、必ずポイント確定要否をtrueに指定してください。
-        if ($this->params['Order']['OrderStatus'] === OrderStatus::PROCESSED()->getValue() && $this->params['Target']['IsPointFix'] === 'false') {
-            throw new InvalidRequestException;
-        }
-    }
-
-
-
-    /**
-     * @return void
-     */
-    protected function validateParams()
-    {
-    }
 }
