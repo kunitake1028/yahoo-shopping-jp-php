@@ -3,6 +3,7 @@
 namespace Shippinno\YahooShoppingJp\Request;
 
 use DateTimeZone;
+use FluidXml\FluidXml;
 use InvalidArgumentException;
 use LogicException;
 use Shippinno\YahooShoppingJp\Api\UpdateOrderShippingStatusApi;
@@ -54,6 +55,19 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
         if (!isset($this->params['Order']['Ship']['ShipStatus'])) {
             throw new InvalidRequestException('ShipStatus is required.');
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function getParams()
+    {
+        $this->validateParams();
+
+        $fluidXml = new FluidXml('Req');
+        $fluidXml->add($this->params);
+
+        return $fluidXml->xml();
     }
 
     /**
