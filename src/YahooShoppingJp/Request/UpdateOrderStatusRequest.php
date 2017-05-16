@@ -3,10 +3,14 @@
 namespace Shippinno\YahooShoppingJp\Request;
 
 use LogicException;
+use Shippinno\YahooShoppingJp\Api\AbstractApi;
+use Shippinno\YahooShoppingJp\Api\UpdateOrderStatusApi;
 use Shippinno\YahooShoppingJp\Exception\InvalidRequestException;
 use Shippinno\YahooShoppingJp\Enum\OrderStatus;
 use Shippinno\YahooShoppingJp\Enum\CancelReason;
 use FluidXml\FluidXml;
+use Shippinno\YahooShoppingJp\Response\AbstractResponse;
+use Shippinno\YahooShoppingJp\Response\UpdateOrderStatusResponse;
 
 class UpdateOrderStatusRequest extends AbstractRequest
 {
@@ -14,6 +18,22 @@ class UpdateOrderStatusRequest extends AbstractRequest
      * @var array
      */
     private $params = [];
+
+    /**
+     * @return AbstractApi
+     */
+    public function api()
+    {
+        return new UpdateOrderStatusApi;
+    }
+
+    /**
+     * @return AbstractResponse
+     */
+    public function response()
+    {
+        new UpdateOrderStatusResponse;
+    }
 
     /**
      * 【必須】ストアアカウント
@@ -155,4 +175,12 @@ class UpdateOrderStatusRequest extends AbstractRequest
         }
     }
 
+
+
+    /**
+     * @return void
+     */
+    protected function validateParams()
+    {
+    }
 }
