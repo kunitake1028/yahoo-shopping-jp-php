@@ -555,16 +555,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "d6f17423412d33df6b69c9aaf12037b91703533b"
+                "reference": "aff95e090fdaf57c20d32d7728b090f2015bfcef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/d6f17423412d33df6b69c9aaf12037b91703533b",
-                "reference": "d6f17423412d33df6b69c9aaf12037b91703533b",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/aff95e090fdaf57c20d32d7728b090f2015bfcef",
+                "reference": "aff95e090fdaf57c20d32d7728b090f2015bfcef",
                 "shasum": ""
             },
             "require": {
@@ -628,7 +628,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2017-03-31T16:16:30+00:00"
+            "time": "2017-04-07T15:22:27+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
