@@ -5,6 +5,8 @@ namespace Shippinno\YahooShoppingJp\Enum;
 use MyCLabs\Enum\Enum;
 
 /**
+ * 支払い方法
+ *
  * @method static ShipMethod PAYMENT_A1()
  * @method static ShipMethod PAYMENT_A6()
  * @method static ShipMethod PAYMENT_A7()

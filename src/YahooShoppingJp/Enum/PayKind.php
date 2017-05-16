@@ -7,7 +7,6 @@ use MyCLabs\Enum\Enum;
 /**
  * 支払い種別
  *
- * @package Shippinno\YahooShoppingJp\Enum
  * @method static PayKind CARD()
  * @method static PayKind NETBANK()
  * @method static PayKind CARRIER()
