@@ -45,20 +45,18 @@ class Client
      * @param HttpClient|null $httpClient
      */
     public function __construct(
-        string $accessToken,
-        string $refreshToken,
-        HttpClient $httpClient = null
+    string $accessToken, string $refreshToken, HttpClient $httpClient = null
     )
     {
         if (null === $httpClient) {
             $httpClient = new HttpClient([
-                'base_uri' => self::BASE_URL,
+              'base_uri' => self::BASE_URL,
             ]);
         }
 
-        $this->accessToken = $accessToken;
+        $this->accessToken  = $accessToken;
         $this->refreshToken = $refreshToken;
-        $this->httpClient = $httpClient;
+        $this->httpClient   = $httpClient;
     }
 
     /**
@@ -75,11 +73,13 @@ class Client
      */
     public function execute(AbstractRequest $request): array
     {
-        $options = [];
-        $options = $this->setRequestParams($options, $request);
-        $options = $this->setAuthorizationHeader($options);
+        $options     = [];
+        $options     = $this->setRequestParams(
+          $options,
+          $request);
+        $options     = $this->setAuthorizationHeader($options);
         $rawResponse = $this->request($options);
-        $response = $this->decodeResponse($rawResponse);
+        $response    = $this->decodeResponse($rawResponse);
 
         return $this->api->distillResponse($response);
     }
@@ -92,9 +92,12 @@ class Client
     private function setRequestParams(array $options, AbstractRequest $request): array
     {
         if ($this->api->httpMethod()->equals(HttpMethod::GET())) {
-            $options = $this->setRequestParamsForGetRequest($options, $request);
-        } elseif ($this->api->httpMethod()->equals(HttpMethod::POST())) {
-            $options = $this->setRequestParamsForPostRequest($options, $request);
+            $options = $this->setRequestParamsForGetRequest($options,
+              $request);
+        }
+        elseif ($this->api->httpMethod()->equals(HttpMethod::POST())) {
+            $options = $this->setRequestParamsForPostRequest($options,
+              $request);
         }
 
         return $options;
@@ -135,7 +138,7 @@ class Client
     private function setAuthorizationHeader(array $options): array
     {
         $options['headers'] = [
-            'Authorization' => 'Bearer ' . $this->accessToken,
+          'Authorization' => 'Bearer ' . $this->accessToken,
         ];
 
         return $options;
@@ -161,14 +164,15 @@ class Client
     private function decodeResponse(ResponseInterface $rawResponse): array
     {
         return json_decode(
-            json_encode(
-                simplexml_load_string(
-                    $rawResponse->getBody()->getContents(),
-                    null,
-                    LIBXML_NOCDATA
-                )
-            ),
-            true
+          json_encode(
+            simplexml_load_string(
+              $rawResponse->getBody()->getContents(),
+              null,
+              LIBXML_NOCDATA
+            )
+          ),
+          true
         );
     }
+
 }
