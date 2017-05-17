@@ -10,6 +10,7 @@ use Shippinno\YahooShoppingJp\Api\UpdateOrderInfoApi;
 use Shippinno\YahooShoppingJp\Enum\PayKind;
 use Shippinno\YahooShoppingJp\Enum\PayMethod;
 use Shippinno\YahooShoppingJp\Enum\PayType;
+use Shippinno\YahooShoppingJp\Enum\RefundStatus;
 use Shippinno\YahooShoppingJp\Enum\SuspectFlag;
 use Shippinno\YahooShoppingJp\Response\UpdateOrderInfoResponse;
 
@@ -323,21 +324,34 @@ class UpdateOrderInfoRequest extends AbstractRequest
     }
 
     /**
-     * 社内メモ
-     * ビジネス注文管理ツールでセラーが入力した社内メモです
-     * 1byte（固定）
+     * 返金ステータス
+     * APIで更新できるのは1：必要から2：返金済みへの更新のみ。
      *
-     * @param string $refundStatus
+     * @param RefundStatus $refundStatus
      * @return UpdateOrderInfoRequest
      */
-    public function setRefundStatus(string $refundStatus): self
+    public function setRefundStatus(RefundStatus $refundStatus): self
     {
         if (isset($this->params['Order']['RefundStatus'])) {
             throw new LogicException('RefundStatus is already set.');
         }
-        $this->params['Order']['RefundStatus'] = $refundStatus;
+        $this->params['Order']['RefundStatus'] = $refundStatus->getValue();
 
         return $this;
     }
 
+
+    /**
+     * @param \DateTimeImmutable $printBillTime
+     * @return UpdateOrderInfoRequest
+     */
+    public function setPayDate(\DateTimeImmutable $payDate): self
+    {
+        if (isset($this->params['Order']['PayDate'])) {
+            throw new LogicException('PayDate is already set.');
+        }
+        $this->params['Order']['PayDate'] = $payDate->format('YmdHis');
+
+        return $this;
+    }
 }
