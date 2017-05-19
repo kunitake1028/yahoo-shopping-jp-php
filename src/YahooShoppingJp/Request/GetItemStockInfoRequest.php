@@ -29,11 +29,27 @@ class GetItemStockInfoRequest extends AbstractRequest
     }
 
     /**
-     * @return void
+     * @throws InvalidRequestException
      */
-    protected function validateParams()
+    protected function validateParams(): void
     {
-        // TODO: Implement validateParams() method.
+        if (! isset($this->params['seller_id'])) {
+            throw new InvalidRequestException('seller_id is not set.');
+        }
+
+        if (! isset($this->params['itemCodeList'])
+            ||  !is_array($this->params['itemCodeList'])
+            || count($this->params['itemCodeList']) == 0) {
+            throw new InvalidRequestException('item_code is not set.');
+        }
+
+        if (count(array_unique($this->params['itemCodeList'])) < count($this->params['itemCodeList'])) {
+            throw new LogicException('Some of item_code are duplicated.');
+        }
+
+        if (count($this->params['itemCodeList']) >= 1000) {
+            throw new LogicException('The number of the item_code must be less than 1000.');
+        }
     }
 
     /**
@@ -75,29 +91,12 @@ class GetItemStockInfoRequest extends AbstractRequest
      */
     public function getParams(): array
     {
-        $this->validateRequest();
+        $this->validateParams();
 
         $this->params['item_code'] = implode(',', $this->params['itemCodeList']);
 
         return $this->params;
     }
 
-    /**
-     * @throws InvalidRequestException
-     */
-    private function validateRequest(): void
-    {
-        if (! isset($this->params['seller_id'])) {
-            throw new InvalidRequestException;
-        }
-
-        if (count(array_unique($this->params['itemCodeList'])) < count($this->params['itemCodeList'])) {
-            throw new LogicException('Some of item_code are duplicated.');
-        }
-
-        if (count($this->params['itemCodeList']) >= 1000) {
-            throw new LogicException('The number of the item_code must be less than 1000.');
-        }
-    }
 
 }

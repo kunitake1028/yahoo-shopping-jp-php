@@ -78,6 +78,32 @@ class GetItemStockInfoRequestTest extends TestCase
         $request->addItemCode(str_repeat('a', 100));
     }
 
+    /**
+     * @test
+     * @expectedException \Shippinno\YahooShoppingJp\Exception\InvalidRequestException
+     * @expectedExceptionMessage seller_id is not set.
+     */
+    public function seller_id_is_not_set()
+    {
+        $request = new GetItemStockInfoRequest;
+
+        $this->assertSame($request, $request->addItemCode('VALID-ITEM-CODE'));
+        $request->getParams();
+    }
+
+    /**
+     * @test
+     * @expectedException \Shippinno\YahooShoppingJp\Exception\InvalidRequestException
+     * @expectedExceptionMessage item_code is not set.
+     */
+    public function item_code_is_not_set()
+    {
+        $request = new GetItemStockInfoRequest;
+
+        $this->assertSame($request, $request->setSellerId('valid-seller-id'));
+        $request->getParams();
+    }
+
 //    /**
 //     * @test
 //     */
