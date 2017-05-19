@@ -7,19 +7,6 @@ use Shippinno\YahooShoppingJp\Exception\DistillationException;
 
 class UpdateOrderStatusApi extends AbstractApi
 {
-
-    /**
-     * {@inheritdoc}
-     */
-    public function distillResponse(array $response): array
-    {
-        if (!isset($response['Result'])) {
-            throw new DistillationException;
-        }
-
-        return $response;
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -34,6 +21,18 @@ class UpdateOrderStatusApi extends AbstractApi
     public function path(): string
     {
         return 'orderStatusChange';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function distillResponse(array $response): array
+    {
+        if (!isset($response['Result'])) {
+            throw new DistillationException;
+        }
+
+        return $response;
     }
 
     /**
