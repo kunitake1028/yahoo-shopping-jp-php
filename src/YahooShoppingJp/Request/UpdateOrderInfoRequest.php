@@ -2,6 +2,7 @@
 
 namespace Shippinno\YahooShoppingJp\Request;
 
+
 use FluidXml\FluidXml;
 use LogicException;
 use Shippinno\YahooShoppingJp\Api\UpdateOrderInfoApi;
@@ -51,7 +52,6 @@ class UpdateOrderInfoRequest extends AbstractRequest
      */
     public function getParams()
     {
-        $this->setIsSeen();
         $this->validateParams();
 
         $fluidXml = new FluidXml('Req');
