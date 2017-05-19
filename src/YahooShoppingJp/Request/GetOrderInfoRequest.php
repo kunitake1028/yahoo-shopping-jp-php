@@ -5,6 +5,7 @@ namespace Shippinno\YahooShoppingJp\Request;
 use FluidXml\FluidXml;
 use LogicException;
 use Shippinno\YahooShoppingJp\Api\GetOrderInfoApi;
+use Shippinno\YahooShoppingJp\Exception\InvalidRequestException;
 use Shippinno\YahooShoppingJp\Response\GetOrderInfoResponse;
 
 class GetOrderInfoRequest extends AbstractRequest
@@ -66,7 +67,13 @@ class GetOrderInfoRequest extends AbstractRequest
      */
     protected function validateParams()
     {
-        // TODO: Implement validateParams() method.
+        if (!isset($this->params['SellerId'])) {
+            throw new InvalidRequestException('SellerId is required.');
+        }
+
+        if (!isset($this->params['Target']['OrderId'])) {
+            throw new InvalidRequestException('OrderId is required.');
+        }
     }
 
     /**
@@ -74,6 +81,8 @@ class GetOrderInfoRequest extends AbstractRequest
      */
     public function getParams()
     {
+        $this->validateParams();
+
         $fluidXml = new FluidXml('Req');
         $fluidXml->add($this->params);
 
