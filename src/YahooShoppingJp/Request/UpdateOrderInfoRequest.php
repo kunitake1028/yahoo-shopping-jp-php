@@ -5,6 +5,7 @@ namespace Shippinno\YahooShoppingJp\Request;
 use FluidXml\FluidXml;
 use LogicException;
 use Shippinno\YahooShoppingJp\Api\UpdateOrderInfoApi;
+use Shippinno\YahooShoppingJp\Enum\ArriveType;
 use Shippinno\YahooShoppingJp\Enum\BillAddressFrom;
 use Shippinno\YahooShoppingJp\Enum\PayKind;
 use Shippinno\YahooShoppingJp\Enum\PayMethod;
@@ -110,13 +111,21 @@ class UpdateOrderInfoRequest extends AbstractRequest
 
     /**
      * 閲覧済みフラグ
-     * 更新する時必ずtrue
+     * 注文情報を更新した場合、自動で閲覧済みになります。
+     * また、未閲覧から閲覧済みにのみ更新できます。
+     * 閲覧済み→未閲覧：更新できません
+     * 未閲覧→閲覧済み：更新できます
+     * false : 未閲覧
+     * true : 閲覧済み
      *
      * @return self
      */
-    public function setIsSeen(): self
+    public function setIsSeen(bool $isSeen): self
     {
-        $this->params['Order']['IsSeen'] = true;
+        if (isset($this->params['Order']['IsSeen'])) {
+            throw new LogicException('IsSeen is already set.');
+        }
+        $this->params['Order']['IsSeen'] = $isSeen ? 'true' : 'false';
 
         return $this;
     }
@@ -225,7 +234,7 @@ class UpdateOrderInfoRequest extends AbstractRequest
      * 注文伝票を出力した日時です。
      * format:YYYYMMDDHH24MISS
      *
-     * @param string $printSlipTime
+     * @param \DateTimeImmutable $printSlipTime
      * @return self
      */
     public function setPrintSlipTime(\DateTimeImmutable $printSlipTime): self
@@ -346,8 +355,9 @@ class UpdateOrderInfoRequest extends AbstractRequest
     }
 
     /**
-     * @param \DateTimeImmutable $printBillTime
+     * @param \DateTimeImmutable $payDate
      * @return self
+     * @internal param \DateTimeImmutable $printBillTime
      */
     public function setPayDate(\DateTimeImmutable $payDate): self
     {
@@ -380,8 +390,9 @@ class UpdateOrderInfoRequest extends AbstractRequest
      * 代金支払い管理注文期限日時
      * format:YYYYMMDD
      *
-     * @param \DateTimeImmutable $printBillTime
+     * @param \DateTimeImmutable $payManageLimitDate
      * @return self
+     * @internal param \DateTimeImmutable $printBillTime
      */
     public function setPayManageLimitDate(\DateTimeImmutable $payManageLimitDate): self
     {
@@ -401,7 +412,7 @@ class UpdateOrderInfoRequest extends AbstractRequest
      * false : 領袖書不要
      * true : 領袖書必要
      *
-     * @param string $needBillSlip
+     * @param bool|string $needBillSlip
      * @return self
      */
     public function setNeedBillSlip(bool $needBillSlip): self
@@ -420,7 +431,7 @@ class UpdateOrderInfoRequest extends AbstractRequest
      * false : 領袖書不要
      * true : 領袖書必要
      *
-     * @param string $needDetailedSlip
+     * @param bool|string $needDetailedSlip
      * @return self
      */
     public function setNeedDetailedSlip(bool $needDetailedSlip): self
@@ -439,7 +450,7 @@ class UpdateOrderInfoRequest extends AbstractRequest
      * false : 領袖書不要
      * true : 領袖書必要
      *
-     * @param string $needReceipt
+     * @param bool|string $needReceipt
      * @return self
      */
     public function setNeedReceipt(bool $needReceipt): self
@@ -884,8 +895,8 @@ class UpdateOrderInfoRequest extends AbstractRequest
     }
 
     /**
-     * 配送希望時間
-     * 注文管理ツールで入力された出荷の配送希望メモ入力内容です
+     * 配送メモ
+     * 注文管理ツールで入力された出荷の配送希望メモ入力内容です。
      * max:500byte
      *
      * @param string $shipNotes
@@ -901,5 +912,683 @@ class UpdateOrderInfoRequest extends AbstractRequest
         return $this;
     }
 
+    /**
+     * 配送伝票番号1
+     * 注文管理ツールでセラーが入力、アップロードした配送会社の配送伝票番号です。注文管理ツールの画面上は1と2があります。
+     * max:30byte
+     *
+     * @param string $shipInvoiceNumber1
+     * @return self
+     */
+    public function setShipInvoiceNumber1(string $shipInvoiceNumber1): self
+    {
+        if (isset($this->params['Ship']['ShipInvoiceNumber1'])) {
+            throw new LogicException('ShipInvoiceNumber1 is already set.');
+        }
+        $this->params['Ship']['ShipInvoiceNumber1'] = $shipInvoiceNumber1;
+
+        return $this;
+    }
+
+    /**
+     * 配送伝票番号2
+     * 注文管理ツールでセラーが入力、アップロードした配送会社の配送伝票番号です。注文管理ツールの画面上は1と2があります。
+     * max:30byte
+     *
+     * @param string $shipInvoiceNumber2
+     * @return self
+     */
+    public function setShipInvoiceNumber2(string $shipInvoiceNumber2): self
+    {
+        if (isset($this->params['Ship']['ShipInvoiceNumber2'])) {
+            throw new LogicException('ShipInvoiceNumber2 is already set.');
+        }
+        $this->params['Ship']['ShipInvoiceNumber2'] = $shipInvoiceNumber2;
+
+        return $this;
+    }
+
+    /**
+     * 配送会社URL
+     * アップロードした配送会社の配送伝票番号です.
+     * max:100byte
+     *
+     * @param string $shipUrl
+     * @return self
+     */
+    public function setShipUrl(string $shipUrl): self
+    {
+        if (isset($this->params['Ship']['ShipUrl'])) {
+            throw new LogicException('ShipUrl is already set.');
+        }
+        $this->params['Ship']['ShipUrl'] = $shipUrl;
+
+        return $this;
+    }
+
+    /**
+     * きょうつく、あすつく
+     * きょうつく注文、あすつく注文の場合設定
+     *
+     * @param ArriveType $arriveType
+     * @return self
+     */
+    public function setArriveType(ArriveType $arriveType): self
+    {
+        if (isset($this->params['Ship']['ArriveType'])) {
+            throw new LogicException('ArriveType is already set.');
+        }
+        $this->params['Ship']['ArriveType'] = $arriveType->getValue();
+
+        return $this;
+    }
+
+    /**
+     * 出荷日
+     * 注文管理ツールで入力された出荷日です。
+     * format:YYYYMMDD
+     *
+     * @param \DateTimeImmutable $shipDate
+     * @return self
+     */
+    public function setShipDate(\DateTimeImmutable $shipDate): self
+    {
+        if (isset($this->params['Ship']['ShipDate'])) {
+            throw new LogicException('ShipDate is already set.');
+        }
+        $this->params['Ship']['ShipDate'] = $shipDate->format('Ymd');
+
+        return $this;
+    }
+
+    /**
+     * 出荷日
+     * 注文管理ツールで入力された出荷日です。
+     * format:YYYYMMDD
+     *
+     * @param \DateTimeImmutable $arrivalDate
+     * @return self
+     */
+    public function setArrivalDate(\DateTimeImmutable $arrivalDate): self
+    {
+        if (isset($this->params['Ship']['ArrivalDate'])) {
+            throw new LogicException('ArrivalDate is already set.');
+        }
+        $this->params['Ship']['ArrivalDate'] = $arrivalDate->format('Ymd');
+
+        return $this;
+    }
+
+    /**
+     * ギフト包装有無
+     * ※モバイル支払いの場合、ギフト包装の変更はできません。
+     * キーなし : カートに設定なし
+     * false : ギフト包装無し
+     * true : ギフト包装有り
+     * max:5byte
+     *
+     * @param bool $needGiftWrap
+     * @return self
+     */
+    public function setNeedGiftWrap(bool $needGiftWrap): self
+    {
+        if (isset($this->params['Ship']['NeedGiftWrap'])) {
+            throw new LogicException('NeedGiftWrap is already set.');
+        }
+        $this->params['Ship']['NeedGiftWrap'] = $needGiftWrap ? 'true' : 'false';
+
+        return $this;
+    }
+
+    /**
+     * ギフト包装の種類
+     * max:30byte
+     *
+     * @param string $giftWrapType
+     * @return self
+     */
+    public function setGiftWrapType(string $giftWrapType): self
+    {
+        if (isset($this->params['Ship']['GiftWrapType'])) {
+            throw new LogicException('GiftWrapType is already set.');
+        }
+        $this->params['Ship']['GiftWrapType'] = $giftWrapType;
+
+        return $this;
+    }
+
+    /**
+     * ギフトメッセージ
+     * max:297byte
+     *
+     * @param string $giftWrapMessage
+     * @return self
+     */
+    public function setGiftWrapMessage(string $giftWrapMessage): self
+    {
+        if (isset($this->params['Ship']['GiftWrapMessage'])) {
+            throw new LogicException('GiftWrapMessage is already set.');
+        }
+        $this->params['Ship']['GiftWrapMessage'] = $giftWrapMessage;
+
+        return $this;
+    }
+
+    /**
+     * のしの有無
+     * キーなし : カートに設定なし
+     * false : のし無し
+     * true : のし有り
+     *
+     * @param bool $needGiftWrapPaper
+     * @return self
+     */
+    public function setNeedGiftWrapPaper(bool $needGiftWrapPaper): self
+    {
+        if (isset($this->params['Ship']['NeedGiftWrapPaper'])) {
+            throw new LogicException('NeedGiftWrapPaper is already set.');
+        }
+        $this->params['Ship']['NeedGiftWrapPaper'] = $needGiftWrapPaper ? '1' : '0';
+
+        return $this;
+    }
+
+    /**
+     * のし種類
+     * max:30byte
+     *
+     * @param string $giftWrapPaperType
+     * @return self
+     */
+    public function setGiftWrapPaperType(string $giftWrapPaperType): self
+    {
+        if (isset($this->params['Ship']['GiftWrapPaperType'])) {
+            throw new LogicException('GiftWrapPaperType is already set.');
+        }
+        $this->params['Ship']['GiftWrapPaperType'] = $giftWrapPaperType;
+
+        return $this;
+    }
+
+    /**
+     * 名入れ（メッセージ）
+     * max:297byte
+     *
+     * @param string $giftWrapName
+     * @return self
+     */
+    public function setGiftWrapName(string $giftWrapName): self
+    {
+        if (isset($this->params['Ship']['GiftWrapName'])) {
+            throw new LogicException('GiftWrapName is already set.');
+        }
+        $this->params['Ship']['GiftWrapName'] = $giftWrapName;
+
+        return $this;
+    }
+
+    /**
+     * お届け先名前
+     * max:297byte
+     *
+     * @param string $shipFirstName
+     * @return self
+     */
+    public function setShipFirstName(string $shipFirstName): self
+    {
+        if (isset($this->params['Ship']['ShipFirstName'])) {
+            throw new LogicException('ShipFirstName is already set.');
+        }
+        $this->params['Ship']['ShipFirstName'] = $shipFirstName;
+
+        return $this;
+    }
+
+    /**
+     * お届け先名前
+     * max:297byte
+     *
+     * @param string $shipFirstNameKana
+     * @return self
+     */
+    public function setShipFirstNameKana(string $shipFirstNameKana): self
+    {
+        if (isset($this->params['Ship']['ShipFirstNameKana'])) {
+            throw new LogicException('ShipFirstNameKana is already set.');
+        }
+        $this->params['Ship']['ShipFirstNameKana'] = $shipFirstNameKana;
+
+        return $this;
+    }
+
+    /**
+     * お届け先名字
+     * max:297byte
+     *
+     * @param string $shipLastName
+     * @return self
+     */
+    public function setShipLastName(string $shipLastName): self
+    {
+        if (isset($this->params['Ship']['ShipLastName'])) {
+            throw new LogicException('ShipLastName is already set.');
+        }
+        $this->params['Ship']['ShipLastName'] = $shipLastName;
+
+        return $this;
+    }
+
+    /**
+     * お届け先名字カナ
+     * max:297byte
+     *
+     * @param string $shipLastNameKana
+     * @return self
+     */
+    public function setShipLastNameKana(string $shipLastNameKana): self
+    {
+        if (isset($this->params['Ship']['ShipLastNameKana'])) {
+            throw new LogicException('ShipLastNameKana is already set.');
+        }
+        $this->params['Ship']['ShipLastNameKana'] = $shipLastNameKana;
+
+        return $this;
+    }
+
+    /**
+     * お届け先郵便番号
+     * max:10byte
+     *
+     * @param string $shipZipCode
+     * @return self
+     */
+    public function setShipZipCode(string $shipZipCode): self
+    {
+        if (isset($this->params['Ship']['ShipZipCode'])) {
+            throw new LogicException('ShipZipCode is already set.');
+        }
+        $this->params['Ship']['ShipZipCode'] = $shipZipCode;
+
+        return $this;
+    }
+
+    /**
+     * お届け先都道府県
+     * 海外の場合は「その他」として保存します。
+     * max:12byte
+     *
+     * @param string $shipPrefecture
+     * @return self
+     */
+    public function setShipPrefecture(string $shipPrefecture): self
+    {
+        if (isset($this->params['Ship']['ShipPrefecture'])) {
+            throw new LogicException('ShipPrefecture is already set.');
+        }
+        $this->params['Ship']['ShipPrefecture'] = $shipPrefecture;
+
+        return $this;
+    }
+
+    /**
+     * お届け先都道府県フリガナ
+     * max:18byte
+     *
+     * @param string $shipPrefectureKana
+     * @return self
+     */
+    public function setShipPrefectureKana(string $shipPrefectureKana): self
+    {
+        if (isset($this->params['Ship']['ShipPrefectureKana'])) {
+            throw new LogicException('ShipPrefectureKana is already set.');
+        }
+        $this->params['Ship']['ShipPrefectureKana'] = $shipPrefectureKana;
+
+        return $this;
+    }
+
+    /**
+     * お届け先市区郡
+     * max:297byte
+     *
+     * @param string $shipCity
+     * @return self
+     */
+    public function setShipCity(string $shipCity): self
+    {
+        if (isset($this->params['Ship']['ShipCity'])) {
+            throw new LogicException('ShipCity is already set.');
+        }
+        $this->params['Ship']['ShipCity'] = $shipCity;
+
+        return $this;
+    }
+
+    /**
+     * お届け先市区郡フリガナ
+     * max:297byte
+     *
+     * @param string $shipCityKana
+     * @return self
+     */
+    public function setShipCityKana(string $shipCityKana): self
+    {
+        if (isset($this->params['Ship']['ShipCityKana'])) {
+            throw new LogicException('ShipCityKana is already set.');
+        }
+        $this->params['Ship']['ShipCityKana'] = $shipCityKana;
+
+        return $this;
+    }
+
+    /**
+     * お届け先住所1
+     * max:297byte
+     *
+     * @param string $shipAddress1
+     * @return self
+     */
+    public function setShipAddress1(string $shipAddress1): self
+    {
+        if (isset($this->params['Ship']['ShipAddress1'])) {
+            throw new LogicException('ShipAddress1 is already set.');
+        }
+        $this->params['Ship']['ShipAddress1'] = $shipAddress1;
+
+        return $this;
+    }
+
+    /**
+     * お届け先住所1フリガナ
+     * max:297byte
+     *
+     * @param string $shipAddress1Kana
+     * @return self
+     */
+    public function setShipAddress1Kana(string $shipAddress1Kana): self
+    {
+        if (isset($this->params['Ship']['ShipAddress1Kana'])) {
+            throw new LogicException('ShipAddress1Kana is already set.');
+        }
+        $this->params['Ship']['ShipAddress1Kana'] = $shipAddress1Kana;
+
+        return $this;
+    }
+
+    /**
+     * お届け先住所2
+     * max:297byte
+     *
+     * @param string $shipAddress2
+     * @return self
+     */
+    public function setShipAddress2(string $shipAddress2): self
+    {
+        if (isset($this->params['Ship']['ShipAddress2'])) {
+            throw new LogicException('ShipAddress2 is already set.');
+        }
+        $this->params['Ship']['ShipAddress2'] = $shipAddress2;
+
+        return $this;
+    }
+
+    /**
+     * お届け先住所2フリガナ
+     * max:297byte
+     *
+     * @param string $shipAddress2Kana
+     * @return self
+     */
+    public function setShipAddress2Kana(string $shipAddress2Kana): self
+    {
+        if (isset($this->params['Ship']['ShipAddress2Kana'])) {
+            throw new LogicException('ShipAddress2Kana is already set.');
+        }
+        $this->params['Ship']['ShipAddress2Kana'] = $shipAddress2Kana;
+
+        return $this;
+    }
+
+    /**
+     * お届け先電話番号
+     * max:14byte
+     *
+     * @param string $shipPhoneNumber
+     * @return self
+     */
+    public function setShipPhoneNumber(string $shipPhoneNumber): self
+    {
+        if (isset($this->params['Ship']['ShipPhoneNumber'])) {
+            throw new LogicException('ShipPhoneNumber is already set.');
+        }
+        $this->params['Ship']['ShipPhoneNumber'] = $shipPhoneNumber;
+
+        return $this;
+    }
+
+    /**
+     * お届け先緊急連絡先
+     * max:14byte
+     *
+     * @param string $shipEmgPhoneNumber
+     * @return self
+     */
+    public function setShipEmgPhoneNumber(string $shipEmgPhoneNumber): self
+    {
+        if (isset($this->params['Ship']['ShipEmgPhoneNumber'])) {
+            throw new LogicException('ShipEmgPhoneNumber is already set.');
+        }
+        $this->params['Ship']['ShipEmgPhoneNumber'] = $shipEmgPhoneNumber;
+
+        return $this;
+    }
+
+    /**
+     * お届け先所属1フィールド名
+     * max:297byte
+     *
+     * @param string $shipSection1Field
+     * @return self
+     */
+    public function setShipSection1Field(string $shipSection1Field): self
+    {
+        if (isset($this->params['Ship']['ShipSection1Field'])) {
+            throw new LogicException('ShipSection1Field is already set.');
+        }
+        $this->params['Ship']['ShipSection1Field'] = $shipSection1Field;
+
+        return $this;
+    }
+
+    /**
+     * お届け先所属1入力情報
+     * max:297byte
+     *
+     * @param string $shipSection1Value
+     * @return self
+     */
+    public function setShipSection1Value(string $shipSection1Value): self
+    {
+        if (isset($this->params['Ship']['ShipSection1Value'])) {
+            throw new LogicException('ShipSection1Value is already set.');
+        }
+        $this->params['Ship']['ShipSection1Value'] = $shipSection1Value;
+
+        return $this;
+    }
+
+    /**
+     * お届け先所属2フィールド名
+     * max:297byte
+     *
+     * @param string $shipSection2Field
+     * @return self
+     */
+    public function setShipSection2Field(string $shipSection2Field): self
+    {
+        if (isset($this->params['Ship']['ShipSection2Field'])) {
+            throw new LogicException('ShipSection2Field is already set.');
+        }
+        $this->params['Ship']['ShipSection2Field'] = $shipSection2Field;
+
+        return $this;
+    }
+
+    /**
+     * お届け先所属2入力情報
+     * max:297byte
+     *
+     * @param string $shipSection2Value
+     * @return self
+     */
+    public function setShipSection2Value(string $shipSection2Value): self
+    {
+        if (isset($this->params['Ship']['ShipSection2Value'])) {
+            throw new LogicException('ShipSection2Value is already set.');
+        }
+        $this->params['Ship']['ShipSection2Value'] = $shipSection2Value;
+
+        return $this;
+    }
+
+    /**
+     * 手数料
+     * セラーが設定した手数料（代引き手数料など）、Yahoo!決済の決済手数料は別です。
+     * max:10byte
+     *
+     * @param string $payCharge
+     * @return self
+     */
+    public function setPayCharge(string $payCharge): self
+    {
+        if (isset($this->params['Detail']['PayCharge'])) {
+            throw new LogicException('PayCharge is already set.');
+        }
+        $this->params['Detail']['PayCharge'] = $payCharge;
+
+        return $this;
+    }
+
+    /**
+     * 送料
+     * max:10byte
+     *
+     * @param string $shipCharge
+     * @return self
+     */
+    public function setShipCharge(string $shipCharge): self
+    {
+        if (isset($this->params['Detail']['ShipCharge'])) {
+            throw new LogicException('ShipCharge is already set.');
+        }
+        $this->params['Detail']['ShipCharge'] = $shipCharge;
+
+        return $this;
+    }
+
+    /**
+     * ギフト包装料
+     * max:10byte
+     *
+     * @param string $giftWrapCharge
+     * @return self
+     */
+    public function setGiftWrapCharge(string $giftWrapCharge): self
+    {
+        if (isset($this->params['Detail']['GiftWrapCharge'])) {
+            throw new LogicException('GiftWrapCharge is already set.');
+        }
+        $this->params['Detail']['GiftWrapCharge'] = $giftWrapCharge;
+
+        return $this;
+    }
+
+    /**
+     * 値引き
+     * max:10byte
+     *
+     * @param string $discount
+     * @return self
+     */
+    public function setDiscount(string $discount): self
+    {
+        if (isset($this->params['Detail']['Discount'])) {
+            throw new LogicException('Discount is already set.');
+        }
+        $this->params['Detail']['Discount'] = $discount;
+
+        return $this;
+    }
+
+    /**
+     * 調整額
+     * マイナスの値も許容、その場合は -(10byte) が許容最大
+     * max:10byte
+     *
+     * @param string $adjustments
+     * @return self
+     */
+    public function setAdjustments(string $adjustments): self
+    {
+        if (isset($this->params['Detail']['Adjustments'])) {
+            throw new LogicException('Adjustments is already set.');
+        }
+        $this->params['Detail']['Adjustments'] = $adjustments;
+
+        return $this;
+    }
+
+    /**
+     * 商品LineID
+     * 商品情報を更新する際は必須です。
+     *
+     * @param string $lineId
+     * @return self
+     */
+    public function setLineId(string $lineId): self
+    {
+        if (isset($this->params['Item']['LineId'])) {
+            throw new LogicException('LineId is already set.');
+        }
+        $this->params['Item']['LineId'] = $lineId;
+
+        return $this;
+    }
+
+    /**
+     * 商品ごとの数量
+     * max:3byte
+     *
+     * @param string $quantity
+     * @return self
+     */
+    public function setQuantity(string $quantity): self
+    {
+        if (isset($this->params['Item']['Quantity'])) {
+            throw new LogicException('Quantity is already set.');
+        }
+        $this->params['Item']['Quantity'] = $quantity;
+
+        return $this;
+    }
+
+    /**
+     * 発売日
+     * 発売日の入力がある場合です。
+     * 発売日＞注文日の場合、予約注文として扱います。
+     * format:YYYYMMDD
+     *
+     * @param \DateTimeImmutable $releaseDate
+     * @return self
+     */
+    public function setReleaseDate(\DateTimeImmutable $releaseDate): self
+    {
+        if (isset($this->params['Item']['ReleaseDate'])) {
+            throw new LogicException('ReleaseDate is already set.');
+        }
+        $this->params['Item']['ReleaseDate'] = $releaseDate->format('Ymd');
+
+        return $this;
+    }
 
 }
