@@ -10,6 +10,7 @@ use Psr\Http\Message\ResponseInterface;
 use Shippinno\YahooShoppingJp\Api\AbstractApi;
 use Shippinno\YahooShoppingJp\Exception\ClientException;
 use Shippinno\YahooShoppingJp\Exception\ConnectException;
+use Shippinno\YahooShoppingJp\Exception\ExpiredAccessTokenException;
 use Shippinno\YahooShoppingJp\Exception\ServerException;
 use Shippinno\YahooShoppingJp\Request\AbstractRequest;
 use SoapBox\Formatter\Formatter;
@@ -69,9 +70,10 @@ class Client
 
     /**
      * @param AbstractRequest $request
-     * @return mixed
+     * @return array|mixed
      * @throws ClientException
      * @throws ConnectException
+     * @throws ExpiredAccessTokenException
      * @throws ServerException
      */
     public function execute(AbstractRequest $request): array
@@ -83,7 +85,7 @@ class Client
         try {
             $rawResponse = $this->request($options);
         } catch (GuzzleClientException $e) {
-            $wwwAuthenticateHeader = $e->getResponse()->getHeader('WWW-Authenticate');
+            $wwwAuthenticateHeader = $e->getResponse()->getHeader('WWW-Authenticate')[0];
 
             if (false !== strpos($wwwAuthenticateHeader, 'error_description="expired token"')) {
                 throw new ExpiredAccessTokenException;
