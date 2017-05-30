@@ -12,6 +12,7 @@ use Shippinno\YahooShoppingJp\Exception\ClientException;
 use Shippinno\YahooShoppingJp\Exception\ConnectException;
 use Shippinno\YahooShoppingJp\Exception\ServerException;
 use Shippinno\YahooShoppingJp\Request\AbstractRequest;
+use SoapBox\Formatter\Formatter;
 
 class Client
 {
@@ -89,10 +90,8 @@ class Client
             throw new ConnectException($e->getMessage(), $e->getCode(), $e);
         }
 
-        $distilledResponse = $this->api->distillResponse($this->decodeResponse($rawResponse));
-        $response = $request->response()->setData($distilledResponse);
-
-        return $response;
+        return $this->api->distillResponse($this->decodeResponse($rawResponse));
+//        $response = $request->response()->setData($distilledResponse);
     }
 
     /**
@@ -182,15 +181,7 @@ class Client
      */
     private function decodeResponse(ResponseInterface $rawResponse): array
     {
-        return json_decode(
-            json_encode(
-                simplexml_load_string(
-                    $rawResponse->getBody()->getContents(),
-                    null,
-                    LIBXML_NOCDATA
-                )
-            ),
-            true
-        );
+        $formatter = Formatter::make($rawResponse->getBody()->getContents(), Formatter::XML);
+        return $formatter->toArray();
     }
 }

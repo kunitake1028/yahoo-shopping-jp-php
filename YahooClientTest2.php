@@ -19,21 +19,24 @@ $client = new Client(
 );
 
 try{
-    $request = new UpdateOrderShippingStatusRequest();
+//    $request = new UpdateOrderShippingStatusRequest();
+//
+//    $request = $request
+//                        ->setSellerId($seller_id)
+//                        ->setOrderId('snbx-nxpqe5hm3-10000069')
+//                        ->setIsPointFix(true)
+//                        ->setShipStatus(ShipStatus::UNSHIPPABLE());
 
-    $request = $request
-                        ->setSellerId($seller_id)
-                        ->setOrderId('hogehoge')
-                        ->setIsPointFix(true)
-                        ->setShipStatus(ShipStatus::UNSHIPPABLE());
+    $request = new \Shippinno\YahooShoppingJp\Request\GetOrderInfoRequest();
+    $request->setSellerId($seller_id);
+    $request->setOrderId('snbx-nxpqe5hm3-10000069');
+
 
     $response = $client->execute($request);
 
     var_dump($response);
 
 }catch (Exception $e){
-    echo $e->getFile()."\n";
-    echo $e->getLine()."\n";
-    echo $e->getCode().':'.$e->getMessage()."\n";
+    echo $e;
 }
 

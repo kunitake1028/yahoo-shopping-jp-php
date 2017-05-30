@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Shippinno\YahooShoppingJp\Response;
 
 class SearchOrdersResponse extends AbstractResponse
