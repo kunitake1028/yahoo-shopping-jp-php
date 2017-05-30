@@ -2,7 +2,8 @@
 
 namespace Shippinno\YahooShoppingJp\Exception;
 
-class ExpiredAccessTokenException
-{
+use Exception;
 
+class ExpiredAccessTokenException extends Exception
+{
 }

@@ -83,6 +83,12 @@ class Client
         try {
             $rawResponse = $this->request($options);
         } catch (GuzzleClientException $e) {
+            $wwwAuthenticateHeader = $e->getResponse()->getHeader('WWW-Authenticate');
+
+            if (false !== strpos($wwwAuthenticateHeader, 'error_description="expired token"')) {
+                throw new ExpiredAccessTokenException;
+            }
+
             throw new ClientException($e->getMessage(), $e->getCode(), $e);
         } catch (GuzzleServerException $e) {
             throw new ServerException($e->getMessage(), $e->getCode(), $e);
