@@ -6,6 +6,7 @@ use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
 use GuzzleHttp\Exception\ServerException as GuzzleServerException;
 use GuzzleHttp\Exception\ClientException as GuzzleClientException;
+use GuzzleHttp\RequestOptions;
 use Psr\Http\Message\ResponseInterface;
 use Shippinno\YahooShoppingJp\Api\AbstractApi;
 use Shippinno\YahooShoppingJp\Exception\ClientException;
@@ -45,16 +46,23 @@ class Client
     /**
      * @var string
      */
-    private $refreshToken;
+    private $cert;
+
+    /**
+     * @var
+     */
+    private $sslKey;
 
     /**
      * @param string $accessToken
-     * @param string $refreshToken
+     * @param string $cert
+     * @param string $sslKey
      * @param HttpClient|null $httpClient
      */
     public function __construct(
         string $accessToken,
-        string $refreshToken,
+        string $cert = null,
+        string $sslKey = null,
         HttpClient $httpClient = null
     ) {
         if (null === $httpClient) {
@@ -64,7 +72,8 @@ class Client
         }
 
         $this->accessToken = $accessToken;
-        $this->refreshToken = $refreshToken;
+        $this->cert = $cert;
+        $this->sslKey = $sslKey;
         $this->httpClient = $httpClient;
     }
 
@@ -82,6 +91,8 @@ class Client
 
         $options = $this->setAuthorizationHeader($this->setRequestParams($request));
 
+        $options = $this->setCertAndSslKey($options);
+        
         try {
             $rawResponse = $this->request($options);
         } catch (GuzzleClientException $e) {
@@ -110,6 +121,20 @@ class Client
     private function setApi(AbstractApi $api)
     {
         $this->api = $api;
+    }
+
+    /**
+     * @param array $options
+     * @return array
+     */
+    private function setCertAndSslKey(array $options): array
+    {
+        if (null !== $this->cert && null !== $this->sslKey) {
+            $options[RequestOptions::CERT] = $this->cert,
+            $options[RequestOptions::SSL_KEY] = $this->sslKey;
+        }
+
+        return $options;
     }
 
     /**
