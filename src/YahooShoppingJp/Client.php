@@ -131,7 +131,7 @@ class Client
     private function setCertAndSslKey(array $options): array
     {
         if (null !== $this->cert && null !== $this->sslKey) {
-            $options[RequestOptions::CERT] = $this->cert,
+            $options[RequestOptions::CERT] = $this->cert;
             $options[RequestOptions::SSL_KEY] = $this->sslKey;
         }
 
