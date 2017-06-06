@@ -18,15 +18,10 @@ use SoapBox\Formatter\Formatter;
 
 class Client
 {
-//    /**
-//     * @var string
-//     */
-//    const BASE_URL = 'https://circus.shopping.yahooapis.jp/ShoppingWebService/V1/';
-
     /**
      * @var string
      */
-    const BASE_URL = 'https://test.circus.shopping.yahooapis.jp/ShoppingWebService/V1/';
+    private $baseUrl = 'https://circus.shopping.yahooapis.jp/ShoppingWebService/V1/';
 
     /**
      * @var HttpClient
@@ -55,19 +50,25 @@ class Client
 
     /**
      * @param string $accessToken
-     * @param string $cert
-     * @param string $sslKey
+     * @param string|null $cert
+     * @param string|null $sslKey
+     * @param bool $enableTestMode
      * @param HttpClient|null $httpClient
      */
     public function __construct(
         string $accessToken,
         string $cert = null,
         string $sslKey = null,
+        bool $enableTestMode = false,
         HttpClient $httpClient = null
     ) {
+        if ($enableTestMode) {
+            $this->baseUrl = 'https://test.circus.shopping.yahooapis.jp/ShoppingWebService/V1/';
+        }
+
         if (null === $httpClient) {
             $httpClient = new HttpClient([
-                'base_uri' => self::BASE_URL,
+                'base_uri' => $this->baseUrl,
             ]);
         }
 
@@ -92,7 +93,7 @@ class Client
         $options = $this->setAuthorizationHeader($this->setRequestParams($request));
 
         $options = $this->setCertAndSslKey($options);
-        
+
         try {
             $rawResponse = $this->request($options);
         } catch (GuzzleClientException $e) {
