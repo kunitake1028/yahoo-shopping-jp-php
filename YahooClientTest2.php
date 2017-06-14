@@ -4,7 +4,9 @@
 require_once __DIR__ . '/vendor/autoload.php';
 
 use Shippinno\YahooShoppingJp\Client;
+use Shippinno\YahooShoppingJp\Enum\OrderStatus;
 use Shippinno\YahooShoppingJp\Enum\ShipStatus;
+use Shippinno\YahooShoppingJp\Enum\StoreStatus;
 use Shippinno\YahooShoppingJp\Request\UpdateOrderShippingStatusRequest;
 
 
@@ -15,10 +17,13 @@ $seller_id    = 'snbx-nxpqe5hm3';
 
 $client = new Client(
     file_get_contents(__DIR__.'/access_token.txt'),
-    file_get_contents(__DIR__.'/refresh_token.txt')
+    null,null,true
 );
 
 try{
+    /*
+     * UpdateOrderShippingStatusRequest
+     */
 //    $request = new UpdateOrderShippingStatusRequest();
 //
 //    $request = $request
@@ -27,10 +32,23 @@ try{
 //                        ->setIsPointFix(true)
 //                        ->setShipStatus(ShipStatus::UNSHIPPABLE());
 
-    $request = new \Shippinno\YahooShoppingJp\Request\GetOrderInfoRequest();
-    $request->setSellerId($seller_id);
-    $request->setOrderId('snbx-nxpqe5hm3-10000069');
+    /*
+     * GetOrderInfoRequest
+     */
+//    $request = new \Shippinno\YahooShoppingJp\Request\GetOrderInfoRequest();
+//    $request->setSellerId($seller_id);
+//    $request->setOrderId('snbx-nxpqe5hm3-10000069');
 
+    /*
+     * SearchOrdersRequest
+     */
+    $request = new \Shippinno\YahooShoppingJp\Request\SearchOrdersRequest();
+    $request->setSellerId($seller_id)
+            ->setOrderedDateTimeRange((new DateTimeImmutable)->sub(new DateInterval('P30D')))
+            ->setIsSeen(false)
+            ->setOrderStatus(OrderStatus::PREORDERED())
+            ->setShipStatus(ShipStatus::SHIPPABLE())
+            ->setStoreStatus(StoreStatus::STORE_STATUS1());
 
     $response = $client->execute($request);
 
