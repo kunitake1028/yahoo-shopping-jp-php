@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  php:
+    build: .
+    volumes:
+     - .:/code
+    working_dir: /code
+  nginx:
+    build: ./nginx/.
+    ports:
+      - '80:80'
+      - '443:443'
