@@ -38,7 +38,7 @@ class UpdateOrderShippingStatusRequest extends AbstractRequest
     /**
      * @throws InvalidRequestException
      */
-    protected function validateParams(): void
+    protected function validateParams()
     {
         if (!isset($this->params['SellerId'])) {
             throw new InvalidRequestException('SellerId is required.');
