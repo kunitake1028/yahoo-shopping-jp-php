@@ -35,7 +35,7 @@
         "myclabs/php-enum": "^1.5",
         "servo/fluidxml": "^1.21",
         "yahoojapan/yconnect-php-sdk": "dev-master",
-        "kunitake1028/laravel-formatter": "^2.0"
+        "kunitake1028/laravel-formatter": "dev-master"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.1",
