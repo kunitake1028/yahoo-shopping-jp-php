@@ -35,7 +35,7 @@
         "myclabs/php-enum": "^1.5",
         "servo/fluidxml": "^1.21",
         "yahoojapan/yconnect-php-sdk": "dev-master",
-        "kunitake1028/soapbox-laravel-formatter": "^2.0"
+        "kunitake1028/soapbox-laravel-formatter": "3.1.2"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.1",
@@ -56,6 +56,10 @@
         {
             "type": "vcs",
             "url": "https://github.com/yahoojapan/yconnect-php-sdk"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/kunitake1028/soapbox-laravel-formatter"
         }
     ]
 }
