@@ -34,7 +34,7 @@
         "guzzlehttp/guzzle": "^6.2",
         "myclabs/php-enum": "^1.5",
         "servo/fluidxml": "^1.21",
-        "yahoojapan/yconnect-php-sdk-v2": "dev-master2.2",
+        "yahoojapan/yconnect-php-sdk": "dev-master2.2",
         "soapbox/laravel-formatter": "dev-master#v3.1.1"
     },
     "require-dev": {
@@ -55,7 +55,7 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/kunitake1028/yconnect-php-sdk-v2"
+            "url": "https://github.com/kunitake1028/yconnect-php-sdk"
         },
         {
             "type": "vcs",
