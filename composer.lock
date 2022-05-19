@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "521d4590eaa9bf5d6352f31003db2ae4",
+    "content-hash": "204ad86abb4a3c14a692fbd8d1cbe53c",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -1669,38 +1669,54 @@
         },
         {
             "name": "yahoojapan/yconnect-php-sdk",
-            "version": "dev-master2.2",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kunitake1028/yconnect-php-sdk.git",
-                "reference": "dddb3ab65eaba877dd81d9b27d6ddce9370f10dc"
+                "reference": "2a78bb2dbb134e4868fcd85356948b2f49457bb5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kunitake1028/yconnect-php-sdk/zipball/dddb3ab65eaba877dd81d9b27d6ddce9370f10dc",
-                "reference": "dddb3ab65eaba877dd81d9b27d6ddce9370f10dc",
+                "url": "https://api.github.com/repos/kunitake1028/yconnect-php-sdk/zipball/2a78bb2dbb134e4868fcd85356948b2f49457bb5",
+                "reference": "2a78bb2dbb134e4868fcd85356948b2f49457bb5",
                 "shasum": ""
             },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "ext-openssl": "*"
+            },
+            "require-dev": {
+                "adhocore/jwt": "0.1.2",
+                "phpunit/phpunit": "^5",
+                "squizlabs/php_codesniffer": "^3.6"
+            },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-0": {
                     "YConnect": "lib/"
                 }
             },
+            "scripts": {
+                "phpunit": [
+                    "phpunit --colors=always"
+                ],
+                "phpcs": [
+                    "phpcs --standard=phpcs.xml"
+                ]
+            },
             "license": [
                 "MIT"
             ],
             "authors": [
                 {
-                    "name": "Yahoo Japan Corporation",
-                    "email": "none"
+                    "name": "Yahoo Japan Corporation"
                 }
             ],
             "description": "YConnect PHP SDK",
             "homepage": "https://github.com/yahoojapan/yconnect-php-sdk",
             "keywords": [
-                "BillingAddress",
-                "FastPay",
                 "OpenID Connect",
                 "PHP",
                 "UserInfo",
@@ -1708,9 +1724,9 @@
                 "Yahoo! JAPAN"
             ],
             "support": {
-                "source": "https://github.com/kunitake1028/yconnect-php-sdk/tree/master2.2"
+                "source": "https://github.com/kunitake1028/yconnect-php-sdk/tree/master"
             },
-            "time": "2016-01-29T06:41:55+00:00"
+            "time": "2021-11-04T04:02:46+00:00"
         }
     ],
     "packages-dev": [
