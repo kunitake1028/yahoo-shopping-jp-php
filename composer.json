@@ -35,7 +35,7 @@
         "myclabs/php-enum": "^1.5",
         "servo/fluidxml": "^1.21",
         "yahoojapan/yconnect-php-sdk": "dev-master",
-        "soapbox/laravel-formatter": "dev-master#v3.1.1"
+        "soapbox/laravel-formatter": "upgrade-for-lumen-8"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.1",
