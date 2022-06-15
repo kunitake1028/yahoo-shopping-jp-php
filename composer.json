@@ -31,7 +31,7 @@
         }
     ],
     "require": {
-        "guzzlehttp/guzzle": "^6.2",
+        "guzzlehttp/guzzle": "^7.0.1",
         "myclabs/php-enum": "^1.5",
         "servo/fluidxml": "^1.21",
         "yahoojapan/yconnect-php-sdk": "dev-master",
