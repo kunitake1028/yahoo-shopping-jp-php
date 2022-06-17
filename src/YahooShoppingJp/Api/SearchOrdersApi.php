@@ -27,11 +27,14 @@ class SearchOrdersApi extends AbstractApi
      */
     public function distillResponse(array $response): array
     {
-        if(! isset($response['Search']['OrderInfo'])) {
-            return [];
+        $data = [];
+        if(isset($response['Search']['OrderInfo'])) {
+            $data = $response['Search']['OrderInfo'];
+            if ((int) $response['Search']['TotalCount'] === 1) {
+                $data = [$response['Search']['OrderInfo']];
+            }
         }
-
-        return $response['Search']['OrderInfo'];
+        return $data;
     }
 
     /**
