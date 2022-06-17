@@ -42,16 +42,6 @@
         "mockery/mockery": "^0.9.9",
         "phpunit/phpunit": "^6.0"
     },
-    "autoload": {
-        "psr-4": {
-            "Shippinno\\YahooShoppingJp\\": "src/YahooShoppingJp"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Shippinno\\YahooShoppingJp\\": "tests/YahooShoppingJp"
-        }
-    },
     "repositories": [
         {
             "type": "vcs",
@@ -61,5 +51,15 @@
             "type": "vcs",
             "url": "https://github.com/kunitake1028/laravel-formatter-8.git"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "Shippinno\\YahooShoppingJp\\": "src/YahooShoppingJp"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Shippinno\\YahooShoppingJp\\": "tests/YahooShoppingJp"
+        }
+    }
 }
