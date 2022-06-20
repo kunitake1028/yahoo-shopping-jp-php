@@ -2,6 +2,7 @@
 
 namespace Shippinno\YahooShoppingJp;
 
+use App\Constants\HttpCode;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Exception\ConnectException as GuzzleConnectException;
 use GuzzleHttp\Exception\ServerException as GuzzleServerException;
@@ -13,6 +14,7 @@ use Shippinno\YahooShoppingJp\Exception\ClientException;
 use Shippinno\YahooShoppingJp\Exception\ConnectException;
 use Shippinno\YahooShoppingJp\Exception\ExpiredAccessTokenException;
 use Shippinno\YahooShoppingJp\Exception\ServerException;
+use Shippinno\YahooShoppingJp\Exception\TokenSessionExpired;
 use Shippinno\YahooShoppingJp\Request\AbstractRequest;
 use SoapBox\Formatter\Formatter;
 
@@ -85,6 +87,7 @@ class Client
      * @throws ConnectException
      * @throws ExpiredAccessTokenException
      * @throws ServerException
+     * @throws TokenSessionExpired
      */
     public function execute(AbstractRequest $request): array
     {
@@ -98,6 +101,10 @@ class Client
             $rawResponse = $this->request($options);
         } catch (GuzzleClientException $e) {
             $wwwAuthenticateHeaders = $e->getResponse()->getHeader('WWW-Authenticate');
+            $bodyContent = $this->decodeResponse($e->getResponse());
+            if ($e->getCode() === 401 && $bodyContent['Code'] === 'px-04102') {
+                throw new TokenSessionExpired();
+            }
 
             if ([] !== $wwwAuthenticateHeaders) {
                 if (false !== strpos($wwwAuthenticateHeaders[0], 'error_description="expired token"')) {
