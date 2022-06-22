@@ -89,7 +89,7 @@ class Client
      * @throws ServerException
      * @throws TokenSessionExpired
      */
-    public function execute(AbstractRequest $request, $isReturnRawResponse = false): array
+    public function execute(AbstractRequest $request, $isReturnRawResponse = false)
     {
         $this->setApi($request->api());
 
