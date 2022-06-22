@@ -102,7 +102,8 @@ class Client
         } catch (GuzzleClientException $e) {
             $wwwAuthenticateHeaders = $e->getResponse()->getHeader('WWW-Authenticate');
             $bodyContent = $this->decodeResponse($e->getResponse());
-            if ($e->getCode() === 401 && $bodyContent['Code'] === 'px-04102') {
+
+            if ($e->getCode() === 401 && (isset($bodyContent['Code']) && $bodyContent['Code'] === 'px-04102')) {
                 throw new TokenSessionExpired();
             }
 
@@ -112,7 +113,8 @@ class Client
                 }
             }
 
-            throw new ClientException($e->getMessage(), $e->getCode(), $e);
+            $message = $bodyContent['Message'] ?? $e->getMessage();
+            throw new ClientException($message, $e->getCode(), $e);
         } catch (GuzzleServerException $e) {
             throw new ServerException($e->getMessage(), $e->getCode(), $e);
         } catch (GuzzleConnectException $e) {
@@ -122,7 +124,6 @@ class Client
             return $rawResponse;
         }
         return $this->api->distillResponse($this->decodeResponse($rawResponse));
-//        $response = $request->response()->setData($distilledResponse);
     }
 
     /**
