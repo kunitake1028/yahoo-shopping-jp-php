@@ -89,7 +89,7 @@ class Client
      * @throws ServerException
      * @throws TokenSessionExpired
      */
-    public function execute(AbstractRequest $request): array
+    public function execute(AbstractRequest $request, $isReturnRawResponse = false): array
     {
         $this->setApi($request->api());
 
@@ -118,7 +118,9 @@ class Client
         } catch (GuzzleConnectException $e) {
             throw new ConnectException($e->getMessage(), $e->getCode(), $e);
         }
-
+        if ($isReturnRawResponse) {
+            return $rawResponse;
+        }
         return $this->api->distillResponse($this->decodeResponse($rawResponse));
 //        $response = $request->response()->setData($distilledResponse);
     }
