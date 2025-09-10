@@ -31,11 +31,11 @@
         }
     ],
     "require": {
-        "guzzlehttp/guzzle": "^6.2",
+        "guzzlehttp/guzzle": "^7.0.1",
         "myclabs/php-enum": "^1.5",
         "servo/fluidxml": "^1.21",
         "yahoojapan/yconnect-php-sdk": "dev-master",
-        "soapbox/laravel-formatter": "dev-upgrade-for-laravel-7"
+        "soapbox/laravel-formatter": "dev-upgrade-for-laravel-8"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.1",
