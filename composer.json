@@ -31,16 +31,16 @@
         }
     ],
     "require": {
-        "guzzlehttp/guzzle": "^7.0.1",
+        "guzzlehttp/guzzle": "^7.2",
         "myclabs/php-enum": "^1.5",
         "servo/fluidxml": "^1.21",
         "yahoojapan/yconnect-php-sdk": "dev-master",
-        "soapbox/laravel-formatter": "dev-upgrade-for-laravel-8"
+        "soapbox/laravel-formatter": "dev-upgrade-for-laravel-9"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.1",
         "mockery/mockery": "^0.9.9",
-        "phpunit/phpunit": "^6.0"
+        "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
         "psr-4": {
